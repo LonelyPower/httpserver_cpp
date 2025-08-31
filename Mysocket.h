@@ -10,6 +10,7 @@ public:
     void bindAddr(const std::string& ip, int port); // 绑定 IP 和端口
     void startListen(int backlog = 5);   // 开始监听
     int  acceptConn();                   // 接受连接，返回客户端 fd
+    void connecttoServer(const std::string& ip, int port);
 
     int  getFd() const { return sockfd; } // 获取 socket fd
 

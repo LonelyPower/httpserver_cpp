@@ -6,92 +6,66 @@
 #include <fcntl.h>
 #include <sys/epoll.h>
 #include <errno.h>
+#include "Mysocket.h"
 
 #define MAX_EVENTS 1024
 #define READ_BUFFER 1024
 
-void setnonblocking(int fd)
-{
+void setnonblocking(int fd) {
     fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) | O_NONBLOCK);
 }
 
-int main()
-{
-    int s_sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    // 初始化
-    //  struct sockaddr_in s_addr;
-    sockaddr_in s_addr{};
+int main() {
+    
+    // 使用封装类
+    Mysocket server;
+    server.bindAddr("127.0.0.1", 8888);
+    server.startListen();
 
-    s_addr.sin_family = AF_INET;
-    s_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    s_addr.sin_port = htons(8888);
-
-    bind(s_sockfd, (sockaddr *)&s_addr, sizeof(s_addr));
-    // 开始监听
-    listen(s_sockfd, SOMAXCONN);
+    int s_sockfd = server.getFd();
 
     int epfd = epoll_create1(0);
     struct epoll_event events[MAX_EVENTS], ev;
-    ev.events = EPOLLIN;   // 在代码中使用了ET模式，且未处理错误，在day12进行了修复，实际上接受连接最好不要用ET模式
-    ev.data.fd = s_sockfd; // 该IO口为服务器socket fd
+    ev.events = EPOLLIN;
+    ev.data.fd = s_sockfd;
     setnonblocking(s_sockfd);
     epoll_ctl(epfd, EPOLL_CTL_ADD, s_sockfd, &ev);
 
-    // 用来保存 哪个客户端连接了我。
-    //  struct sockaddr_in c_addr;
-
-    // bzero(&c_addr, sizeof(c_addr));
-
-    
-
-    while (true)
-    {
+    while (true) {
         int epfdnums = epoll_wait(epfd, events, MAX_EVENTS, -1);
-        for (int i = 0; i < epfdnums; i++)
-        {
-            if (events[i].data.fd == s_sockfd)
-            {
-                sockaddr_in c_addr{};
-                socklen_t c_addr_len = sizeof(c_addr);
-                int c_sockfd = accept(s_sockfd, (sockaddr *)&c_addr, &c_addr_len);
-
+        for (int i = 0; i < epfdnums; i++) {
+            if (events[i].data.fd == s_sockfd) {
+                // 新连接
+                int c_sockfd = server.acceptConn();
 
                 ev.events = EPOLLIN;
-                ev.data.fd = c_sockfd; // 该IO口为服务器socket fd
+                ev.data.fd = c_sockfd;
                 setnonblocking(c_sockfd);
                 epoll_ctl(epfd, EPOLL_CTL_ADD, c_sockfd, &ev);
 
-                printf("new client fd %d! IP: %s Port: %d\n", c_sockfd, inet_ntoa(c_addr.sin_addr), ntohs(c_addr.sin_port));
-            }
-            else
-            {
-                while (true)
-                {
-                    int c_sockfd=events[i].data.fd;
-                    char buf[1024] = {0};
+                printf("new client fd %d connected!\n", c_sockfd);
+            } else {
+                // 已连接的客户端消息
+                while (true) {
+                    int c_sockfd = events[i].data.fd;
+                    char buf[READ_BUFFER] = {0};
                     ssize_t read_bytes = read(c_sockfd, buf, sizeof(buf));
-                    if (read_bytes > 0)
-                    {
+                    if (read_bytes > 0) {
                         printf("message from client fd %d: %s\n", c_sockfd, buf);
-                        write(c_sockfd, buf, read_bytes); // 只回写实际长度
-                    }
-                    else if (read_bytes == 0)
-                    {
-                        printf("EOF, client fd %d disconnected\n", events[i].data.fd);
-                        close(events[i].data.fd); // 关闭socket会自动将文件描述符从epoll树上移除
+                        write(c_sockfd, buf, read_bytes);
+                    } else if (read_bytes == 0) {
+                        printf("EOF, client fd %d disconnected\n", c_sockfd);
+                        close(c_sockfd);
                         break;
-                    }
-                    else if (read_bytes == -1)
-                    {
-                        if (errno == EAGAIN || errno == EWOULDBLOCK)
-                        {
-                            // 没有数据，非阻塞返回，稍后再试
+                    } else if (read_bytes == -1) {
+                        if (errno == EAGAIN || errno == EWOULDBLOCK) {
                             break;
-                        }
-                        else if(errno == EINTR)
-                        { // 客户端正常中断、继续读取
-                            printf("continue reading");
+                        } else if (errno == EINTR) {
                             continue;
+                        } else {
+                            perror("read error");
+                            close(c_sockfd);
+                            break;
                         }
                     }
                 }
@@ -99,6 +73,5 @@ int main()
         }
     }
 
-    close(s_sockfd);
     return 0;
 }

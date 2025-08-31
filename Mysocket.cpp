@@ -7,7 +7,7 @@
 Mysocket::Mysocket() {
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     memset(&addr, 0, sizeof(addr));
-    
+
     if (sockfd < 0) {
         perror("socket create failed");
     }
@@ -19,7 +19,7 @@ Mysocket::~Mysocket() {
     }
 }
 
-void Mysocket::bindAddr(const std::string& ip, int port);
+void Mysocket::bindAddr(const std::string& ip, int port)
 {
     
     addr.sin_family = AF_INET;
@@ -45,4 +45,15 @@ int Mysocket::acceptConn() {
         perror("accept failed");
     }
     return cfd;
+}
+
+void Mysocket:: connecttoServer(const std::string& ip, int port)
+{
+        addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = inet_addr(ip.c_str());
+    addr.sin_port = htons(port);
+
+    if (connect(sockfd, (sockaddr *)&addr, sizeof(addr)) < 0) {
+        perror("bind failed");
+    }
 }

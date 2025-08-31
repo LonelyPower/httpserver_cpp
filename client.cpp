@@ -3,22 +3,28 @@
 #include <arpa/inet.h>
 #include <string.h>
 #include <unistd.h>
-
+#include "Mysocket.h"
 #define BUFFER_SIZE 1024 
 
 int main() 
 {
-    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
-    struct sockaddr_in serv_addr;
-    bzero(&serv_addr, sizeof(serv_addr));
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    serv_addr.sin_port = htons(8888);
+    // 使用封装类
+    Mysocket client;
+    // server.bindAddr("127.0.0.1", 8888);
+    // server.startListen();
+    client.connecttoServer("127.0.0.1", 8888);
+    // int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    int sockfd = client.getFd();
+    // struct sockaddr_in serv_addr;
+    // bzero(&serv_addr, sizeof(serv_addr));
+    // serv_addr.sin_family = AF_INET;
+    // serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    // serv_addr.sin_port = htons(8888);
 
     //bind(sockfd, (sockaddr*)&serv_addr, sizeof(serv_addr)); 客户端不进行bind操作
 
-    connect(sockfd, (sockaddr*)&serv_addr, sizeof(serv_addr));    
+    // connect(sockfd, (sockaddr*)&serv_addr, sizeof(serv_addr));    
     
     while (true)
     {
