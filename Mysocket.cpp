@@ -1,25 +1,26 @@
-#include "Mysocket.h"
+#include "MySocket.h"
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <cstring>
 #include <iostream>
 
-Mysocket::Mysocket() {
+MySocket::MySocket() {
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     memset(&addr, 0, sizeof(addr));
 
     if (sockfd < 0) {
         perror("socket create failed");
     }
+    // fcntl(sockfd, F_SETFL, fcntl(sockfd, F_GETFL) | O_NONBLOCK);
 }
 
-Mysocket::~Mysocket() {
+MySocket::~MySocket() {
     if (sockfd >= 0) {
         close(sockfd);
     }
 }
 
-void Mysocket::bindAddr(const std::string& ip, int port)
+void MySocket::bindAddr(const std::string& ip, int port)
 {
     
     addr.sin_family = AF_INET;
@@ -31,23 +32,24 @@ void Mysocket::bindAddr(const std::string& ip, int port)
     }
 }
 
-void Mysocket::startListen(int backlog) {
+void MySocket::startListen(int backlog) {
     if (listen(sockfd, backlog) < 0) {
         perror("listen failed");
     }
 }
 
-int Mysocket::acceptConn() {
+int MySocket::acceptConn() {
     sockaddr_in c_addr{};
     socklen_t c_addr_len = sizeof(c_addr);
     int cfd = accept(sockfd, (sockaddr *)&c_addr, &c_addr_len);
     if (cfd < 0) {
         perror("accept failed");
     }
+    // fcntl(cfd, F_SETFL, fcntl(sockfd, F_GETFL) | O_NONBLOCK);
     return cfd;
 }
 
-void Mysocket:: connecttoServer(const std::string& ip, int port)
+void MySocket:: connectToServer(const std::string& ip, int port)
 {
         addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = inet_addr(ip.c_str());

@@ -1,26 +1,46 @@
 CXX = g++
-CXXFLAGS = -Wall -O2 -MMD -MP   # 自动依赖
+CXXFLAGS = -Wall -O2 -fPIC -MMD -MP
 
 TARGETS = server client
-OBJS_SERVER = server.o Mysocket.o
-OBJS_CLIENT = client.o Mysocket.o   # client 也需要 Mysocket.o
+OBJDIR = build
+LIBDIR = $(OBJDIR)
+LIBNAME = libmynet.so
 
-all: $(TARGETS)
+SRCS_COMMON = MySocket.cpp MyEpoll.cpp
+SRCS_SERVER = server.cpp
+SRCS_CLIENT = client.cpp
 
-server: $(OBJS_SERVER)
-	$(CXX) $(CXXFLAGS) -o $@ $(OBJS_SERVER)
+OBJS_COMMON = $(SRCS_COMMON:%.cpp=$(OBJDIR)/%.o)
+OBJS_SERVER = $(SRCS_SERVER:%.cpp=$(OBJDIR)/%.o)
+OBJS_CLIENT = $(SRCS_CLIENT:%.cpp=$(OBJDIR)/%.o)
 
-client: $(OBJS_CLIENT)
-	$(CXX) $(CXXFLAGS) -o $@ $(OBJS_CLIENT)
+all: $(TARGETS) $(LIBDIR)/$(LIBNAME)
 
-%.o: %.cpp
+# server 依赖 so
+server: $(OBJS_SERVER) $(LIBDIR)/$(LIBNAME)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS_SERVER) -L$(LIBDIR) -lmynet -Wl,-rpath=$(LIBDIR)
+
+# client 依赖 so
+client: $(OBJS_CLIENT) $(LIBDIR)/$(LIBNAME)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS_CLIENT) -L$(LIBDIR) -lmynet -Wl,-rpath=$(LIBDIR)
+
+# 生成共享库 .so
+$(LIBDIR)/$(LIBNAME): $(OBJS_COMMON) | $(OBJDIR)
+	$(CXX) -shared -o $@ $(OBJS_COMMON)
+
+# 通用规则：生成 build/*.o
+$(OBJDIR)/%.o: %.cpp | $(OBJDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# 自动包含依赖
--include $(OBJS_SERVER:.o=.d) $(OBJS_CLIENT:.o=.d)
+# 确保 build/ 目录存在
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
+# 自动依赖
+-include $(OBJS_COMMON:.o=.d) $(OBJS_SERVER:.o=.d) $(OBJS_CLIENT:.o=.d)
 
 run: server
 	./server
 
 clean:
-	rm -f $(TARGETS) *.o *.d
+	rm -rf $(TARGETS) $(OBJDIR)

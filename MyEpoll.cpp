@@ -2,7 +2,9 @@
 #include <unistd.h>   // close
 #include <cstdio>    // perror
 #include <cstdlib>
-// finish this cpp
+#include <fcntl.h>
+
+
 MyEpoll::MyEpoll()
 {
     MAX_EVENTS = 1024;
@@ -33,6 +35,7 @@ void MyEpoll::addToEpoll(int socketfd,uint32_t mode)
     {
         perror("epoll_ctl: add");
     }
+    fcntl(socketfd, F_SETFL, fcntl(socketfd, F_GETFL) | O_NONBLOCK);
 }
 
 int MyEpoll::waitEvents(int MAX_EVENTS, int timeout)

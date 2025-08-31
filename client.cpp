@@ -3,17 +3,17 @@
 #include <arpa/inet.h>
 #include <string.h>
 #include <unistd.h>
-#include "Mysocket.h"
+#include "MySocket.h"
 #define BUFFER_SIZE 1024 
 
 int main() 
 {
 
     // 使用封装类
-    Mysocket client;
+    MySocket client;
     // server.bindAddr("127.0.0.1", 8888);
     // server.startListen();
-    client.connecttoServer("127.0.0.1", 8888);
+    client.connectToServer("127.0.0.1", 8888);
     // int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     int sockfd = client.getFd();
     // struct sockaddr_in serv_addr;
