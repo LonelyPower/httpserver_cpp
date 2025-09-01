@@ -1,6 +1,7 @@
 #include "MyEpoll.h"
 #include <unistd.h>   // close
 #include <cstdio>    // perror
+#include <cstring>    // perror
 #include <cstdlib>
 #include <fcntl.h>
 
@@ -67,4 +68,12 @@ std::vector<MyChannel*> MyEpoll::getActiveChannels(int timeout)
         activeChannels.push_back(ch);
     }
     return activeChannels;
+}
+
+void MyEpoll::delChannel(MyChannel* channel) {
+    int fd = channel->getFd();
+    struct epoll_event ev;
+    memset(&ev, 0, sizeof(ev));
+    epoll_ctl(epfd, EPOLL_CTL_DEL, fd, &ev);
+    // channels.erase(fd);   // 如果你在 map 里保存了 Channel 指针
 }

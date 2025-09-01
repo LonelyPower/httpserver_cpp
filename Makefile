@@ -6,7 +6,7 @@ OBJDIR = build
 LIBDIR = $(OBJDIR)
 LIBNAME = libmynet.so
 
-SRCS_COMMON = MySocket.cpp MyEpoll.cpp
+SRCS_COMMON = MySocket.cpp MyEpoll.cpp MyChannel.cpp
 SRCS_SERVER = server.cpp
 SRCS_CLIENT = client.cpp
 

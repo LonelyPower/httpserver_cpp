@@ -16,6 +16,7 @@ public:
     int  getFd() const { return epfd; } 
     std::vector<epoll_event>& getEvents() { return events; } 
     std::vector<MyChannel*> getActiveChannels(int timeout=-1);
+    void delChannel(MyChannel* channel);
 
 private:
     int MAX_EVENTS;

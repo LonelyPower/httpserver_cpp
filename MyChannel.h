@@ -13,6 +13,9 @@ public:
     void addToEpoll(int socketfd,uint32_t  mode);
     void setEvents(uint32_t ev) { events = ev; }
     void setRevents(uint32_t rev) { revents = rev; }
+    void setInEpoll(bool in) { inEpoll = in; }
+    void setReadCallback(const std::function<void()>& cb) ;
+    void handleEvent();
 
     int  getFd() const { return fd; } 
     // std::vector<epoll_event>& getEvents() { return events; } 
