@@ -8,6 +8,7 @@
 #include <errno.h>
 #include "MySocket.h"
 #include "MyEpoll.h"
+#include "MyChannel.h"
 
 #define MAX_EVENTS 1024
 #define READ_BUFFER 1024
@@ -21,21 +22,23 @@ int main()
     server.startListen();
 
     MyEpoll epoll;
-    epoll.addToEpoll(server.getFd(), EPOLLIN);
+    MyChannel channel(server.getFd(), EPOLLIN);
+    epoll.addChannel(&channel);
     // fcntl(server.getFd(), F_SETFL, fcntl(server.getFd(), F_GETFL) | O_NONBLOCK);
 
     while (true)
     {
+        std::vector<MyChannel*> activeChannels = epoll.getActiveChannels();
+        // int readyEvents = epoll.waitEvents();
 
-        int readyEvents = epoll.waitEvents();
-
-        for (int i = 0; i < readyEvents; i++)
+        for (auto activeChannel : activeChannels)
         {
-            if (epoll.getEvents()[i].data.fd == server.getFd())
+            if (activeChannel->getFd() == server.getFd())
             {
                 // 新连接
                 int c_sockfd = server.acceptConn();
-                epoll.addToEpoll(c_sockfd, EPOLLIN);
+                MyChannel* clientChannel = new MyChannel(c_sockfd, EPOLLIN);
+                epoll.addChannel(clientChannel);
                 // fcntl(c_sockfd, F_SETFL, fcntl(c_sockfd, F_GETFL) | O_NONBLOCK);
                 printf("new client fd %d connected!\n", c_sockfd);
             }
@@ -44,7 +47,7 @@ int main()
                 // 已连接的客户端消息
                 while (true)
                 {
-                    int c_sockfd = epoll.getEvents()[i].data.fd;
+                    int c_sockfd = activeChannel->getFd();
                     char buf[READ_BUFFER] = {0};
                     ssize_t read_bytes = read(c_sockfd, buf, sizeof(buf));
                     if (read_bytes > 0)

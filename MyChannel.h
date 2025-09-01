@@ -3,6 +3,7 @@
 #include <netinet/in.h> // sockaddr_in
 #include <sys/epoll.h>
 #include <vector>
+#include <functional>
 
 class MyChannel {
 public:
