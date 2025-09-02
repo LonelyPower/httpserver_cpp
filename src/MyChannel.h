@@ -11,22 +11,22 @@ public:
     ~MyChannel();                        
 
     void addToEpoll(int socketfd,uint32_t  mode);
-    void setEvents(uint32_t ev) { events = ev; }
-    void setRevents(uint32_t rev) { revents = rev; }
-    void setInEpoll(bool in) { inEpoll = in; }
-    void setCallBack(const std::function<void()>& cb) ;
+        void setEvents(uint32_t ev) { events_ = ev; }
+        void setRevents(uint32_t rev) { revents_ = rev; }
+        void setInEpoll(bool in) { inEpoll_ = in; }
+        void setCallback(const std::function<void()>& cb) ;
     void handleEvent();
 
-    int  getFd() const { return fd; } 
+    int  getFd() const { return fd_; } 
     // std::vector<epoll_event>& getEvents() { return events; } 
-    uint32_t getEvents() const { return events; } 
-    uint32_t getRevents() const { return revents; } 
-    bool isInEpoll() const { return inEpoll; } 
+        uint32_t getEvents() const { return events_; } 
+        uint32_t getRevents() const { return revents_; } 
+        bool isInEpoll() const { return inEpoll_; } 
 
 private:
-    int fd;
-    uint32_t events;
-    uint32_t revents;
-    bool inEpoll;
-    std::function<void()> callBack;
+        int fd_;
+        uint32_t events_;
+        uint32_t revents_;
+        bool inEpoll_;
+        std::function<void()> readCallback_;
 };

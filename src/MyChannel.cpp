@@ -7,33 +7,26 @@
 
 MyChannel::MyChannel(int fd,int32_t events)
 {
-    this->fd = fd;
-    this->events = events;
-    this->revents = 0;
-    this->inEpoll = false;
+    this->fd_ = fd;
+    this->events_ = events;
+    this->revents_ = 0;
+    this->inEpoll_ = false;
 }
 
 MyChannel::~MyChannel(){}
 
 void MyChannel::handleEvent() 
 {
-    if (revents & EPOLLIN) 
+    if (revents_ & EPOLLIN) 
     {
-        if (callBack)
+        if (readCallback_)
         {
-            callBack();
+            readCallback_();
         } 
     }
     // 可以扩展其他事件的处理
 }
-void MyChannel::setCallBack(const std::function<void()>& cb) 
+void MyChannel::setCallback(const std::function<void()>& cb) 
 {
-    callBack = std::move(cb); 
+    readCallback_ = std::move(cb); 
 }
-// void MyChannel::setEvents(uint32_t ev) {
-//     this->events = ev;
-// }
-
-// void MyChannel::setRevents(uint32_t rev) {
-//     this->revents = rev;
-// }

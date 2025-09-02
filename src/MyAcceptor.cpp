@@ -1,28 +1,28 @@
 #include "MyAcceptor.h"
 
-MyAcceptor::MyAcceptor(MyEventLoop *loop,const std::string& ip, int port) : event_loop(loop)
+MyAcceptor::MyAcceptor(MyEventLoop *loop,const std::string& ip, int port) : event_loop_(loop)
 {
-    serv_sock = new MySocket();
-    serv_sock->bindAddr(ip, port);
-    serv_sock->startListen();
+    serv_sock_ = new MySocket();
+    serv_sock_->bindAddr(ip, port);
+    serv_sock_->startListen();
 
     // MyEpoll epoll;
-    serv_channel = new MyChannel(serv_sock->getFd(), EPOLLIN);
+    serv_channel_ = new MyChannel(serv_sock_->getFd(), EPOLLIN);
     std::function<void()> cb = std::bind(&MyAcceptor::handleConnection, this);
-    serv_channel->setCallBack(cb);
-    event_loop->updateChannel(serv_channel);
+    serv_channel_->setCallback(cb);
+    event_loop_->updateChannel(serv_channel_);
 }
 
 void MyAcceptor::handleConnection() 
 {
 
-    int cfd = serv_sock->acceptConn();
-    if (newConnCallBack) {
-        newConnCallBack(cfd); // 交给 Server
+    int cfd = serv_sock_->acceptConn();
+    if (acceptor_callback_) {
+        acceptor_callback_(cfd); // 交给 Server
     }
 }
 
 void MyAcceptor::setCallBack(const std::function<void(int)>& cb) 
 {
-    newConnCallBack = std::move(cb); 
+    acceptor_callback_ = std::move(cb); 
 }

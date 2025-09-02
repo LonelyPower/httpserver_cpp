@@ -1,14 +1,12 @@
 #include "MyServer.h"
 #include<iostream>
 #include <unistd.h>  
-MyServer::MyServer(MyEventLoop *loop,const std::string& ip, int port) : event_loop(loop)
+MyServer::MyServer(MyEventLoop *loop,const std::string& ip, int port) : event_loop_(loop)
 {
-    // serv_sock = new MySocket();
-    // serv_sock->bindAddr(ip, port);
-    // serv_sock->startListen();
-    acceptor = new MyAcceptor(loop, ip, port);
-    acceptor->setCallBack([this](int c_sockfd) {
-        this->newConnection(c_sockfd);
+
+    acceptor_ = new MyAcceptor(loop, ip, port);
+    acceptor_->setCallBack([this](int c_sockfd) {
+        this->handleServerEvent(c_sockfd);
     });
     // MyEpoll epoll;
     // serv_channel = new MyChannel(serv_sock->getFd(), EPOLLIN);
@@ -20,11 +18,12 @@ MyServer::MyServer(MyEventLoop *loop,const std::string& ip, int port) : event_lo
 MyServer::~MyServer()
 {
     // delete serv_sock;
-    delete serv_channel;
+    delete serv_channel_;
 }
 
-void MyServer::handleClientEvent(MyChannel* channel) {
-    int c_sockfd = channel->getFd();
+// void MyServer::handleClientEvent(MyChannel* channel) {
+void MyServer::handleClientEvent(int c_sockfd) {
+    // int c_sockfd = channel->getFd();
     char buf[1024];
     ssize_t read_bytes = read(c_sockfd, buf, sizeof(buf));
 
@@ -33,17 +32,19 @@ void MyServer::handleClientEvent(MyChannel* channel) {
         write(c_sockfd, buf, read_bytes);
     } else if (read_bytes == 0) {
         printf("EOF, client fd %d disconnected\n", c_sockfd);
-        event_loop->delChannel(channel);
+    // event_loop_->delChannel(channel);
         close(c_sockfd);
-        delete channel;
-    } else {
+        connections_.erase(c_sockfd);
+
+        // delete channel;
+    // } else {
         if (errno == EAGAIN || errno == EWOULDBLOCK) return;
         else if (errno == EINTR) return;
         else {
             perror("read error");
-            event_loop->delChannel(channel);
+            // event_loop_->delChannel(channel);
             close(c_sockfd);
-            delete channel;
+            // delete channel;
         }
     }
 }
@@ -51,20 +52,30 @@ void MyServer::handleClientEvent(MyChannel* channel) {
 
 void MyServer::newConnection(int c_sockfd)
 {
-    // int c_sockfd = serv_sock->acceptConn();
-    MyChannel *clientChannel = new MyChannel(c_sockfd, EPOLLIN);
+    MyConnection* conn = new MyConnection(event_loop_, c_sockfd);
 
-clientChannel->setCallBack([this, clientChannel]() {
-    this->handleClientEvent(clientChannel);
-});
+    conn->setMessageCallback(
+        [this](int fd) { this->handleClientEvent(fd); },
+        c_sockfd
+    );
 
-    event_loop->updateChannel(clientChannel);
-    printf("new client fd %d connected!\n", c_sockfd);
+    connections_[c_sockfd] = conn;
+    // printf("new client fd %d connected!\n", c_sockfd);
 }
 
-// void MyServer::handleServerEvent()
+// void MyServer::handleServerEvent(int c_sockfd)
 // {
-//     newConnection();
+//     newConnection(c_sockfd);
+// });
+
+//     event_loop_->updateChannel(clientChannel);
+//     printf("new client fd %d connected!\n", c_sockfd);
+
 // }
+
+void MyServer::handleServerEvent(int c_sockfd)
+{
+    newConnection(c_sockfd);
+}
 
 

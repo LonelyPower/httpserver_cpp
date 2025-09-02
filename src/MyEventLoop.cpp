@@ -4,19 +4,19 @@
 #include <vector>
 
 MyEventLoop::MyEventLoop()
-    : epoll(new MyEpoll()), isQuit(false) {}
+    : epoll_(new MyEpoll()), isQuit_(false) {}
 
 MyEventLoop::~MyEventLoop()
 {
-    delete epoll;
+    delete epoll_;
 }
 
 void MyEventLoop::startLoop()
 {
-    while (!this->isQuit)
+    while (!this->isQuit_)
     {
-        // epoll->waitEvents();                                                  // 先等待事件
-        std::vector<MyChannel *> activeChannels = epoll->getActiveChannels(); // 获取就绪的 Channel
+        epoll_->waitEvents();                                                  // 先等待事件
+        std::vector<MyChannel *> activeChannels = epoll_->getActiveChannels(); // 获取就绪的 Channel
         for (auto *ch : activeChannels)
         {
             ch->handleEvent(); // 分发事件
@@ -26,10 +26,10 @@ void MyEventLoop::startLoop()
 
 void MyEventLoop::updateChannel(MyChannel *channel)
 {
-    epoll->updateChannel(channel); // 或者叫 updateChannel
+    epoll_->updateChannel(channel); // 或者叫 updateChannel
 }
     
 void MyEventLoop::delChannel(MyChannel *channel)
 {
-    epoll->delChannel(channel);
+    epoll_->delChannel(channel);
 }

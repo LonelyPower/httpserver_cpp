@@ -5,35 +5,35 @@
 #include <iostream>
 
 MySocket::MySocket() {
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    memset(&addr, 0, sizeof(addr));
+    sockfd_ = socket(AF_INET, SOCK_STREAM, 0);
+    memset(&addr_, 0, sizeof(addr_));
 
-    if (sockfd < 0) {
+    if (sockfd_ < 0) {
         perror("socket create failed");
     }
     // fcntl(sockfd, F_SETFL, fcntl(sockfd, F_GETFL) | O_NONBLOCK);
 }
 
 MySocket::~MySocket() {
-    if (sockfd >= 0) {
-        close(sockfd);
+    if (sockfd_ >= 0) {
+        close(sockfd_);
     }
 }
 
 void MySocket::bindAddr(const std::string& ip, int port)
 {
     
-    addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = inet_addr(ip.c_str());
-    addr.sin_port = htons(port);
+    addr_.sin_family = AF_INET;
+    addr_.sin_addr.s_addr = inet_addr(ip.c_str());
+    addr_.sin_port = htons(port);
 
-    if (bind(sockfd, (sockaddr *)&addr, sizeof(addr)) < 0) {
+    if (bind(sockfd_, (sockaddr *)&addr_, sizeof(addr_)) < 0) {
         perror("bind failed");
     }
 }
 
 void MySocket::startListen(int backlog) {
-    if (listen(sockfd, backlog) < 0) {
+    if (listen(sockfd_, backlog) < 0) {
         perror("listen failed");
     }
 }
@@ -41,23 +41,23 @@ void MySocket::startListen(int backlog) {
 int MySocket::acceptConn() {
     sockaddr_in c_addr{};
     socklen_t c_addr_len = sizeof(c_addr);
-    int cfd = accept4(sockfd, (sockaddr *)&c_addr, &c_addr_len,
+    int cfd = accept4(sockfd_, (sockaddr *)&c_addr, &c_addr_len,
                   SOCK_NONBLOCK | SOCK_CLOEXEC);
 
     if (cfd < 0) {
         perror("accept failed");
     }
-    // fcntl(cfd, F_SETFL, fcntl(sockfd, F_GETFL) | O_NONBLOCK);
+    // fcntl(cfd, F_SETFL, fcntl(sockfd_, F_GETFL) | O_NONBLOCK);
     return cfd;
 }
 
 void MySocket:: connectToServer(const std::string& ip, int port)
 {
-        addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = inet_addr(ip.c_str());
-    addr.sin_port = htons(port);
+        addr_.sin_family = AF_INET;
+    addr_.sin_addr.s_addr = inet_addr(ip.c_str());
+    addr_.sin_port = htons(port);
 
-    if (connect(sockfd, (sockaddr *)&addr, sizeof(addr)) < 0) {
+    if (connect(sockfd_, (sockaddr *)&addr_, sizeof(addr_)) < 0) {
         perror("bind failed");
     }
 }

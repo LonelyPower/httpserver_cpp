@@ -12,9 +12,9 @@ public:
     int  acceptConn();                   // 接受连接，返回客户端 fd
     void connectToServer(const std::string& ip, int port);
 
-    int  getFd() const { return sockfd; } // 获取 socket fd
+    int  getFd() const { return sockfd_; } // 获取 socket fd
 
 private:
-    int sockfd;
-    sockaddr_in addr;
+    int sockfd_;
+    sockaddr_in addr_;
 };

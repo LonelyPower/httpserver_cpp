@@ -10,11 +10,11 @@ public:
     void updateChannel(MyChannel* channel);   // 添加通道
     void delChannel(MyChannel* channel);   // 删除通道
     void startLoop();                            // 事件循环
-    void quitLoop() { isQuit = true; }
+    void quitLoop() { isQuit_ = true; }
 
 private:
-    MyEpoll *epoll;
-    bool isQuit;
+    MyEpoll *epoll_;
+    bool isQuit_;
     // int epoll_fd;
     // std::vector<MyChannel*> channels;
 };

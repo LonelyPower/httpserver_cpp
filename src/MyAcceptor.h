@@ -18,9 +18,12 @@ public:
     void newConnection();
 
 private:
-    MyEventLoop *event_loop;
-    MySocket* serv_sock;
-    MyChannel* serv_channel;
-    std::function<void(int)> newConnCallBack;
+    MyEventLoop *event_loop_;
+    MySocket* serv_sock_;
+    MyChannel* serv_channel_;
+    std::function<void(int)> acceptor_callback_;
+
+
+
 
 };
