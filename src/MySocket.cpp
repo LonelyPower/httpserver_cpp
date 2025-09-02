@@ -41,7 +41,9 @@ void MySocket::startListen(int backlog) {
 int MySocket::acceptConn() {
     sockaddr_in c_addr{};
     socklen_t c_addr_len = sizeof(c_addr);
-    int cfd = accept(sockfd, (sockaddr *)&c_addr, &c_addr_len);
+    int cfd = accept4(sockfd, (sockaddr *)&c_addr, &c_addr_len,
+                  SOCK_NONBLOCK | SOCK_CLOEXEC);
+
     if (cfd < 0) {
         perror("accept failed");
     }

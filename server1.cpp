@@ -45,7 +45,7 @@ int main()
                 MyChannel *clientChannel = new MyChannel(c_sockfd, EPOLLIN);
 
                 // 绑定时捕获 epoll 和 clientChannel
-                clientChannel->setReadCallback(
+                clientChannel->setCallback(
                     std::bind(handleRead, std::ref(epoll), clientChannel));
 
                 epoll.updateChannel(clientChannel);

@@ -9,8 +9,8 @@ MyServer::MyServer(MyEventLoop *loop,const std::string& ip, int port) : event_lo
 
     // MyEpoll epoll;
     serv_channel = new MyChannel(serv_sock->getFd(), EPOLLIN);
-    std::function<void()> cb = std::bind(&MyServer::newConnection, this);
-    serv_channel->setReadCallback(cb);
+    std::function<void()> cb = std::bind(&MyServer::handleServerEvent, this);
+    serv_channel->setCallback(cb);
     event_loop->updateChannel(serv_channel);
 }
 
@@ -45,15 +45,23 @@ void MyServer::handleClientEvent(MyChannel* channel) {
     }
 }
 
+
 void MyServer::newConnection()
 {
     int c_sockfd = serv_sock->acceptConn();
     MyChannel *clientChannel = new MyChannel(c_sockfd, EPOLLIN);
 
-clientChannel->setReadCallback([this, clientChannel]() {
+clientChannel->setCallback([this, clientChannel]() {
     this->handleClientEvent(clientChannel);
 });
 
     event_loop->updateChannel(clientChannel);
     printf("new client fd %d connected!\n", c_sockfd);
 }
+
+void MyServer::handleServerEvent()
+{
+    newConnection();
+}
+
+

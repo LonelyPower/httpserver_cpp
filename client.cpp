@@ -14,7 +14,10 @@ int main()
     MySocket client;
     client.connectToServer("127.0.0.1", 8888);
     int sockfd = client.getFd();
-    
+    if(sockfd!=-1)
+    {
+        printf("client socket created successfully, fd = %d\n", sockfd);
+    }
     while (true)
     {
         char buf[BUFFER_SIZE]; // 在这个版本，buf大小必须大于或等于服务器端buf大小，不然会出错，想想为什么？

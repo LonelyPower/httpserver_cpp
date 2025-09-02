@@ -11,6 +11,7 @@ public:
     ~MyServer();                         // 析构函数
 
     void handleClientEvent(MyChannel* channel);
+    void handleServerEvent();
     // void handleClientEvent(int c_sockfd);
     void newConnection();
 
