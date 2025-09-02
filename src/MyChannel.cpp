@@ -19,16 +19,16 @@ void MyChannel::handleEvent()
 {
     if (revents & EPOLLIN) 
     {
-        if (readCallback)
+        if (callBack)
         {
-            readCallback();
+            callBack();
         } 
     }
     // 可以扩展其他事件的处理
 }
-void MyChannel::setCallback(const std::function<void()>& cb) 
+void MyChannel::setCallBack(const std::function<void()>& cb) 
 {
-    readCallback = std::move(cb); 
+    callBack = std::move(cb); 
 }
 // void MyChannel::setEvents(uint32_t ev) {
 //     this->events = ev;

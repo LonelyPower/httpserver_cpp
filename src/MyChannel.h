@@ -14,7 +14,7 @@ public:
     void setEvents(uint32_t ev) { events = ev; }
     void setRevents(uint32_t rev) { revents = rev; }
     void setInEpoll(bool in) { inEpoll = in; }
-    void setCallback(const std::function<void()>& cb) ;
+    void setCallBack(const std::function<void()>& cb) ;
     void handleEvent();
 
     int  getFd() const { return fd; } 
@@ -28,5 +28,5 @@ private:
     uint32_t events;
     uint32_t revents;
     bool inEpoll;
-    std::function<void()> readCallback;
+    std::function<void()> callBack;
 };

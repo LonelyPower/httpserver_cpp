@@ -15,7 +15,7 @@ void MyEventLoop::startLoop()
 {
     while (!this->isQuit)
     {
-        epoll->waitEvents();                                                  // 先等待事件
+        // epoll->waitEvents();                                                  // 先等待事件
         std::vector<MyChannel *> activeChannels = epoll->getActiveChannels(); // 获取就绪的 Channel
         for (auto *ch : activeChannels)
         {

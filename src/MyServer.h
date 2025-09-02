@@ -5,6 +5,7 @@
 #include "MyEventLoop.h"
 #include "MySocket.h"
 #include "MyChannel.h"
+#include "MyAcceptor.h"
 class MyServer {
 public:
     MyServer(MyEventLoop *loop,const std::string& ip="127.0.0.1", int port=8888);                        // 构造函数
@@ -13,11 +14,12 @@ public:
     void handleClientEvent(MyChannel* channel);
     void handleServerEvent();
     // void handleClientEvent(int c_sockfd);
-    void newConnection();
+    void newConnection(int c_sockfd);
 
 private:
     MyEventLoop *event_loop;
-    MySocket* serv_sock;
+    MyAcceptor *acceptor;
+    // MySocket* serv_sock;
     MyChannel* serv_channel;
 
 };

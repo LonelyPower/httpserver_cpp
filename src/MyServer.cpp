@@ -3,20 +3,23 @@
 #include <unistd.h>  
 MyServer::MyServer(MyEventLoop *loop,const std::string& ip, int port) : event_loop(loop)
 {
-    serv_sock = new MySocket();
-    serv_sock->bindAddr(ip, port);
-    serv_sock->startListen();
-
+    // serv_sock = new MySocket();
+    // serv_sock->bindAddr(ip, port);
+    // serv_sock->startListen();
+    acceptor = new MyAcceptor(loop, ip, port);
+    acceptor->setCallBack([this](int c_sockfd) {
+        this->newConnection(c_sockfd);
+    });
     // MyEpoll epoll;
-    serv_channel = new MyChannel(serv_sock->getFd(), EPOLLIN);
-    std::function<void()> cb = std::bind(&MyServer::handleServerEvent, this);
-    serv_channel->setCallback(cb);
-    event_loop->updateChannel(serv_channel);
+    // serv_channel = new MyChannel(serv_sock->getFd(), EPOLLIN);
+    // std::function<void()> cb = std::bind(&MyServer::handleServerEvent, this);
+    // serv_channel->setCallBack(cb);
+    // event_loop->updateChannel(serv_channel);
 }
 
 MyServer::~MyServer()
 {
-    delete serv_sock;
+    // delete serv_sock;
     delete serv_channel;
 }
 
@@ -46,12 +49,12 @@ void MyServer::handleClientEvent(MyChannel* channel) {
 }
 
 
-void MyServer::newConnection()
+void MyServer::newConnection(int c_sockfd)
 {
-    int c_sockfd = serv_sock->acceptConn();
+    // int c_sockfd = serv_sock->acceptConn();
     MyChannel *clientChannel = new MyChannel(c_sockfd, EPOLLIN);
 
-clientChannel->setCallback([this, clientChannel]() {
+clientChannel->setCallBack([this, clientChannel]() {
     this->handleClientEvent(clientChannel);
 });
 
@@ -59,9 +62,9 @@ clientChannel->setCallback([this, clientChannel]() {
     printf("new client fd %d connected!\n", c_sockfd);
 }
 
-void MyServer::handleServerEvent()
-{
-    newConnection();
-}
+// void MyServer::handleServerEvent()
+// {
+//     newConnection();
+// }
 
 
