@@ -8,7 +8,7 @@
 
 MyEpoll::MyEpoll(int maxEvents)
 {
-    activeCount_ = 0;
+    // activeCount_ = 0;
     // MAX_EVENTS = 1024;
     events_.resize(maxEvents);
     epfd_ = epoll_create1(0);
@@ -56,10 +56,7 @@ void MyEpoll::delChannel(MyChannel* channel) {
 
 
 
-int MyEpoll::waitEvents(int maxEvents, int timeout)
-{
-    return epoll_wait(epfd_, events_.data(), MAX_EVENTS, timeout);
-}
+
 
 std::vector<MyChannel*> MyEpoll::getActiveChannels(int timeout)
 {

@@ -25,7 +25,7 @@ private:
     MyEventLoop *event_loop_;
     MyAcceptor *acceptor_;
     // MySocket* serv_sock;
-    MyChannel* serv_channel_;
+    // MyChannel* serv_channel_;
     std::map<int, MyConnection*> connections_;
 
 };

@@ -12,7 +12,11 @@ MyAcceptor::MyAcceptor(MyEventLoop *loop,const std::string& ip, int port) : even
     serv_channel_->setCallback(cb);
     event_loop_->updateChannel(serv_channel_);
 }
-
+MyAcceptor::~MyAcceptor()
+{
+    delete serv_channel_;
+    delete serv_sock_;
+}
 void MyAcceptor::handleConnection() 
 {
 

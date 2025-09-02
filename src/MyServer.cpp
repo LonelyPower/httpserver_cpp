@@ -18,7 +18,7 @@ MyServer::MyServer(MyEventLoop *loop,const std::string& ip, int port) : event_lo
 MyServer::~MyServer()
 {
     // delete serv_sock;
-    delete serv_channel_;
+    delete acceptor_;
 }
 
 // void MyServer::handleClientEvent(MyChannel* channel) {
@@ -55,8 +55,7 @@ void MyServer::newConnection(int c_sockfd)
     MyConnection* conn = new MyConnection(event_loop_, c_sockfd);
 
     conn->setMessageCallback(
-        [this](int fd) { this->handleClientEvent(fd); },
-        c_sockfd
+        [this](int fd) { this->handleClientEvent(fd); }
     );
 
     connections_[c_sockfd] = conn;

@@ -17,12 +17,12 @@ public:
     ~MyConnection();
 
     // void handleClientEvent(MyChannel* channel);
-    void setMessageCallback(const std::function<void(int)>& cb,int fd);
+    void setMessageCallback(const std::function<void(int)>& cb);
     // void setMessageCallback(const std::function<void(MyConnection*, int)>& cb,int fd);
-    void handleConnection();
+    // void handleConnection();
     // void handleServerEvent();
     // void handleClientEvent(int c_sockfd);
-    void newConnection();
+    // void newConnection();
 
 private:
     MyEventLoop *event_loop_;

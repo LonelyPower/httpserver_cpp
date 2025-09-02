@@ -17,7 +17,7 @@ MyConnection::~MyConnection()
     // delete serv_channel_;
 }
 
-void MyConnection::setMessageCallback(const std::function<void( int)>& cb,int fd) 
+void MyConnection::setMessageCallback(const std::function<void( int)>& cb) 
 {
     message_callback_ = std::move(cb);
 }

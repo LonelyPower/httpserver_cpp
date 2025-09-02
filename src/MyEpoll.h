@@ -14,7 +14,7 @@ public:
 
     void updateChannel(MyChannel* channel);       // 注册或修改 Channel
     void delChannel(MyChannel* channel);       // 删除 Channel
-    int waitEvents(int maxEvents=MAX_EVENTS, int timeout = -1);          // 等待事件
+    // int waitEvents(int maxEvents=MAX_EVENTS, int timeout = -1);          // 等待事件
     std::vector<MyChannel*> getActiveChannels(int timeout=-1); // 返回活跃的 Channel
 
     int  getFd() const { return epfd_; } 
@@ -24,5 +24,5 @@ private:
     int epfd_;
     // int MAX_EVENTS;
     std::vector<epoll_event> events_;
-    int activeCount_;   // 上一次 epoll_wait 返回的事件数量
+    // int activeCount_;   // 上一次 epoll_wait 返回的事件数量
 };
