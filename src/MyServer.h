@@ -9,10 +9,11 @@
 #include "MyChannel.h"
 #include "MyAcceptor.h"
 #include "MyConnection.h"
+#include "MyThreadPool.h"
 
 class MyServer {
 public:
-    MyServer(MyEventLoop *loop,const std::string& ip="127.0.0.1", int port=8888);                        // 构造函数
+    MyServer(MyEventLoop *loop,int poolsize=4,const std::string& ip="127.0.0.1", int port=8888);                        // 构造函数
     ~MyServer();                         // 析构函数
 
     void handleClientEvent(int c_sockfd);
@@ -27,5 +28,7 @@ private:
     // MySocket* serv_sock;
     // MyChannel* serv_channel_;
     std::map<int, MyConnection*> connections_;
+    // std::vector<MyThreadPool*> thread_pool_;
+    MyThreadPool* thread_pool_; 
 
 };

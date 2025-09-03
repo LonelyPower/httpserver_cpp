@@ -1,8 +1,10 @@
 #include "MyServer.h"
 #include<iostream>
 #include <unistd.h>  
-MyServer::MyServer(MyEventLoop *loop,const std::string& ip, int port) : event_loop_(loop)
+MyServer::MyServer(MyEventLoop *loop,int poolsize,const std::string& ip, int port) : event_loop_(loop)
 {
+    thread_pool_ = new MyThreadPool(poolsize);
+    thread_pool_->start();
 
     acceptor_ = new MyAcceptor(loop, ip, port);
     acceptor_->setCallBack([this](int c_sockfd) {
@@ -52,8 +54,9 @@ void MyServer::handleClientEvent(int c_sockfd) {
 
 void MyServer::newConnection(int c_sockfd)
 {
-    MyConnection* conn = new MyConnection(event_loop_, c_sockfd);
+    MyEventLoop* ioLoop = thread_pool_->getNextLoop();
 
+    MyConnection* conn = new MyConnection(ioLoop, c_sockfd);
     conn->setMessageCallback(
         [this](int fd) { this->handleClientEvent(fd); }
     );

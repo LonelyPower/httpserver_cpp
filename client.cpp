@@ -30,6 +30,7 @@ int main()
             break;
         }
         bzero(&buf, sizeof(buf));
+        continue;
         ssize_t read_bytes = read(sockfd, buf, sizeof(buf));
         if (read_bytes > 0)
         {
@@ -42,7 +43,7 @@ int main()
         }
         else if (read_bytes == -1)
         {
-            close(sockfd);
+            // close(sockfd);
         }
     }
 
