@@ -7,6 +7,7 @@
 #include "MyChannel.h"
 #include "MyEventLoop.h"
 #include "MyChannel.h"
+#include "Buffer.h"
 
 
 #define MAX_EVENTS 1024
@@ -17,12 +18,15 @@ public:
     ~MyConnection();
 
     // void handleClientEvent(MyChannel* channel);
-    void setMessageCallback(const std::function<void(int)>& cb);
+    void setMessageCallback(std::function<void(int)> cb);
     // void setMessageCallback(const std::function<void(MyConnection*, int)>& cb,int fd);
     // void handleConnection();
     // void handleServerEvent();
     // void handleClientEvent(int c_sockfd);
     // void newConnection();
+
+    Buffer& getInputBuffer() { return inputBuffer_; }
+    Buffer& getOutputBuffer() { return outputBuffer_; }
 
 private:
     MyEventLoop *event_loop_;
@@ -30,5 +34,8 @@ private:
     // MyChannel* serv_channel_;
     // std::function<void(int)> connection_callback_;
     std::function<void(int)> message_callback_;
+    Buffer inputBuffer_;
+    Buffer outputBuffer_;
+    MyChannel* channel_ {nullptr};
 
 };

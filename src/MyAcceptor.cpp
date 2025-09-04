@@ -8,8 +8,10 @@ MyAcceptor::MyAcceptor(MyEventLoop *loop,const std::string& ip, int port) : even
 
     // MyEpoll epoll;
     serv_channel_ = new MyChannel(serv_sock_->getFd(), EPOLLIN);
-    std::function<void()> cb = std::bind(&MyAcceptor::handleConnection, this);
-    serv_channel_->setCallback(cb);
+    serv_channel_->setCallback([this]() {
+        handleConnection();
+    });
+
     event_loop_->updateChannel(serv_channel_);
 }
 MyAcceptor::~MyAcceptor()
@@ -26,7 +28,7 @@ void MyAcceptor::handleConnection()
     }
 }
 
-void MyAcceptor::setCallBack(const std::function<void(int)>& cb) 
+void MyAcceptor::setCallBack(const std::function<void(int)> cb) 
 {
     acceptor_callback_ = std::move(cb); 
 }

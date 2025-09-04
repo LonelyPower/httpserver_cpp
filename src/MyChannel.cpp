@@ -26,7 +26,7 @@ void MyChannel::handleEvent()
     }
     // 可以扩展其他事件的处理
 }
-void MyChannel::setCallback(const std::function<void()>& cb) 
+void MyChannel::setCallback(const std::function<void()> cb) 
 {
     readCallback_ = std::move(cb); 
 }

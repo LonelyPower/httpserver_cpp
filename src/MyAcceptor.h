@@ -11,7 +11,7 @@ public:
     ~MyAcceptor();                         // 析构函数
 
     // void handleClientEvent(MyChannel* channel);
-    void setCallBack(const std::function<void(int)>& cb);
+    void setCallBack(const std::function<void(int)> cb);
     void handleConnection();
     // void handleServerEvent();
     // void handleClientEvent(int c_sockfd);

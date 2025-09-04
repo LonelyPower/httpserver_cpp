@@ -3,7 +3,7 @@
 
 int main() {
     MyEventLoop *loop = new MyEventLoop();
-    MyServer *server = new MyServer(loop);
+    MyServer *server = new MyServer(loop,2);
     loop->startLoop();
     return 0;
 }

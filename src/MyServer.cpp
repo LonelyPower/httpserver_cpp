@@ -1,6 +1,7 @@
 #include "MyServer.h"
 #include<iostream>
 #include <unistd.h>  
+#include <errno.h>
 MyServer::MyServer(MyEventLoop *loop,int poolsize,const std::string& ip, int port) : event_loop_(loop)
 {
     thread_pool_ = new MyThreadPool(poolsize);
@@ -23,30 +24,43 @@ MyServer::~MyServer()
     delete acceptor_;
 }
 
-// void MyServer::handleClientEvent(MyChannel* channel) {
-void MyServer::handleClientEvent(int c_sockfd) {
-    // int c_sockfd = channel->getFd();
-    char buf[1024];
-    ssize_t read_bytes = read(c_sockfd, buf, sizeof(buf));
+void MyServer::handleClientEvent(int c_sockfd)
+{
+    auto it = connections_.find(c_sockfd);
+    if (it == connections_.end()) return;
+    MyConnection* conn = it->second;
+    Buffer& in = conn->getInputBuffer();
 
-    if (read_bytes > 0) {
-        printf("message from client fd %d: %s\n", c_sockfd, buf);
-        write(c_sockfd, buf, read_bytes);
-    } else if (read_bytes == 0) {
-        printf("EOF, client fd %d disconnected\n", c_sockfd);
-    // event_loop_->delChannel(channel);
-        close(c_sockfd);
-        connections_.erase(c_sockfd);
-
-        // delete channel;
-    // } else {
-        if (errno == EAGAIN || errno == EWOULDBLOCK) return;
-        else if (errno == EINTR) return;
-        else {
-            perror("read error");
-            // event_loop_->delChannel(channel);
+    // 从输入缓冲区拿到本次读到的数据（在 MyConnection 的 Channel 回调中已读入）
+    if (in.readableBytes() > 0)
+    {
+        std::string msg = in.retrieveAllAsString();
+        printf("message from client fd %d: %s\n", c_sockfd, msg.c_str());
+        // 返回最小 HTTP 响应，便于 wrk 正常统计
+        static const char kBody[] = "Hello, World\n";
+        char header[256];
+        int bodyLen = sizeof(kBody) - 1;
+        int hdrLen = snprintf(header, sizeof(header),
+                              "HTTP/1.1 200 OK\r\n"
+                              "Content-Type: text/plain; charset=utf-8\r\n"
+                              "Content-Length: %d\r\n"
+                              "Connection: keep-alive\r\n"
+                              "\r\n",
+                              bodyLen);
+        // 尽量一次写完 header + body（非阻塞写不保证全部写完，但响应很小一般可一次写完）
+        ssize_t n1 = write(c_sockfd, header, hdrLen);
+        if (n1 < 0 && !(errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR)) {
+            perror("write header error");
             close(c_sockfd);
-            // delete channel;
+            connections_.erase(c_sockfd);
+            return;
+        }
+        ssize_t n2 = write(c_sockfd, kBody, bodyLen);
+        if (n2 < 0 && !(errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR)) {
+            perror("write body error");
+            close(c_sockfd);
+            connections_.erase(c_sockfd);
+            return;
         }
     }
 }
