@@ -12,6 +12,7 @@ public:
 
     // void handleClientEvent(MyChannel* channel);
     void setCallBack(const std::function<void(int)> cb);
+    void handleConnection1();
     void handleConnection();
     // void handleServerEvent();
     // void handleClientEvent(int c_sockfd);

@@ -34,7 +34,7 @@ MyConnection::MyConnection(MyEventLoop* loop, int c_sockfd) : event_loop_(loop),
     });
 
     event_loop_->updateChannel(channel_);
-    printf("new client fd %d connected!\n", c_sockfd);
+    //printf("new client fd %d connected!\n", c_sockfd);
 }
 MyConnection::~MyConnection()
 {

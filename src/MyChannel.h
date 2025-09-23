@@ -7,7 +7,8 @@
 
 class MyChannel {
 public:
-    MyChannel(int fd,int32_t events=EPOLLIN | EPOLLET);                          
+    MyChannel(int fd,int32_t events=EPOLLIN);               
+    //MyChannel(int fd,int32_t events=EPOLLIN | EPOLLET);             
     ~MyChannel();                        
 
     // void addToEpoll(int socketfd,uint32_t  mode);

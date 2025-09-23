@@ -5,7 +5,7 @@
 #include <vector>
 #include "MyChannel.h"
 
-#define MAX_EVENTS 1024
+#define MAX_EVENTS 65500
 
 class MyEpoll {
 public:
