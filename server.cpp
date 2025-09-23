@@ -4,7 +4,7 @@
 
 int main()
 {
-
+    // test
     struct rlimit rl;
     getrlimit(RLIMIT_NOFILE, &rl);
     printf("rlimit: soft=%ld hard=%ld\n", rl.rlim_cur, rl.rlim_max);
