@@ -35,7 +35,7 @@ void MyServer::handleClientEvent(int c_sockfd)
     if (in.readableBytes() > 0)
     {
         std::string msg = in.retrieveAllAsString();
-        // printf("message from client fd %d: %s\n", c_sockfd, msg.c_str());
+        printf("message from client fd %d: %s\n", c_sockfd, msg.c_str());
         //  返回最小 HTTP 响应，便于 wrk 正常统计
         static const char kBody[] = "Hello, World\n";
         char header[256];

@@ -4,8 +4,8 @@
 #include <sys/epoll.h>
 #include <vector>
 #include "MyChannel.h"
+#include "config.h"
 
-#define MAX_EVENTS 65500
 
 class MyEpoll
 {

@@ -67,7 +67,7 @@ void MyEpoll::delChannel(MyChannel *channel)
 std::vector<MyChannel *> MyEpoll::getActiveChannels(int timeout)
 {
     std::vector<MyChannel *> activeChannels;
-    int nfds = epoll_wait(epfd_, events_.data(), MAX_EVENTS, timeout);
+    int nfds = epoll_wait(epfd_, events_.data(), events_.size(), timeout);
     // errif(nfds == -1, "epoll wait error");
     for (int i = 0; i < nfds; ++i)
     {

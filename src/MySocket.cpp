@@ -68,6 +68,6 @@ void MySocket::connectToServer(const std::string &ip, int port)
 
     if (connect(sockfd_, (sockaddr *)&addr_, sizeof(addr_)) < 0)
     {
-        perror("bind failed");
+        perror("connect failed");
     }
 }

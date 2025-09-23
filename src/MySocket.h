@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <netinet/in.h> // sockaddr_in
+#include  <sys/socket.h> 
 
 class MySocket
 {

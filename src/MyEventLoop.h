@@ -2,6 +2,7 @@
 #include <string>
 #include <netinet/in.h> // sockaddr_in
 #include "MyEpoll.h"
+#include "MyChannel.h"
 class MyEventLoop
 {
 public:

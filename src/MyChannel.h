@@ -4,7 +4,7 @@
 #include <sys/epoll.h>
 #include <vector>
 #include <functional>
-#include <config.h>
+#include "config.h"
 class MyChannel
 {
 public:
