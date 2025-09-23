@@ -1,4 +1,10 @@
 /.vscode
+/build/CMakeFiles
+/build/CMakeCache.txt
 client
 server
 test
+*.o
+*.d
+*.camke
+
