@@ -3,7 +3,7 @@
 #include <string>
 #include <cstdint>
 #include <sys/epoll.h>
-constexpr int POOL_SIZE = 7;
+constexpr int POOL_SIZE = 3;
 constexpr int SERVER_PORT = 8888;
 constexpr const char* SERVER_IP = "127.0.0.1";
 constexpr int32_t ACCEPT_MODE = EPOLLIN;
