@@ -1,0 +1,25 @@
+Checks: >
+  bugprone-*,
+  performance-*,
+  readability-*,
+  modernize-*,
+  cppcoreguidelines-*,
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  -cppcoreguidelines-owning-memory,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-pro-type-vararg
+
+WarningsAsErrors: ''   # 如果要把所有警告当作错误，可写成 '*'
+
+HeaderFilterRegex: 'src/.*'   # 只检查 src/ 下的源码
+
+AnalyzeTemporaryDtors: false
+CheckOptions:
+  - key:             readability-identifier-naming.VariableCase
+    value:           lower_case
+  - key:             readability-identifier-naming.FunctionCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.ClassCase
+    value:           CamelCase
+  - key:             modernize-use-nullptr.NullMacros
+    value:           'NULL'

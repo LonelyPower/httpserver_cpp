@@ -142,6 +142,19 @@ server/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/build
 .PHONY : server/fast
 
+#=============================================================================
+# Target rules for targets named run-clang-tidy
+
+# Build rule for target.
+run-clang-tidy: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 run-clang-tidy
+.PHONY : run-clang-tidy
+
+# fast build rule for target.
+run-clang-tidy/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run-clang-tidy.dir/build.make CMakeFiles/run-clang-tidy.dir/build
+.PHONY : run-clang-tidy/fast
+
 client.o: client.cpp.o
 .PHONY : client.o
 
@@ -414,6 +427,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... run-clang-tidy"
 	@echo "... client"
 	@echo "... server"
 	@echo "... client.o"
