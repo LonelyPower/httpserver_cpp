@@ -4,25 +4,26 @@
 #include <sys/epoll.h>
 #include <vector>
 #include <functional>
-
-class MyChannel {
+#include <config.h>
+class MyChannel
+{
 public:
-    MyChannel(int fd,int32_t events=EPOLLIN);               
-    //MyChannel(int fd,int32_t events=EPOLLIN | EPOLLET);             
-    ~MyChannel();                        
+        MyChannel(int fd, int32_t events );
+        // MyChannel(int fd,int32_t events=EPOLLIN | EPOLLET);
+        ~MyChannel();
 
-    // void addToEpoll(int socketfd,uint32_t  mode);
-    void setEvents(uint32_t ev) { events_ = ev; }
-    void setRevents(uint32_t rev) { revents_ = rev; }
-    void setInEpoll(bool in) { inEpoll_ = in; }
-    void setCallback(const std::function<void()> cb) ;
-    void handleEvent();
+        // void addToEpoll(int socketfd,uint32_t  mode);
+        void setEvents(uint32_t ev) { events_ = ev; }
+        void setRevents(uint32_t rev) { revents_ = rev; }
+        void setInEpoll(bool in) { inEpoll_ = in; }
+        void setCallback(const std::function<void()> cb);
+        void handleEvent();
 
-    int  getFd() const { return fd_; } 
-    // std::vector<epoll_event>& getEvents() { return events; } 
-        uint32_t getEvents() const { return events_; } 
-        uint32_t getRevents() const { return revents_; } 
-        bool isInEpoll() const { return inEpoll_; } 
+        int getFd() const { return fd_; }
+        // std::vector<epoll_event>& getEvents() { return events; }
+        uint32_t getEvents() const { return events_; }
+        uint32_t getRevents() const { return revents_; }
+        bool isInEpoll() const { return inEpoll_; }
 
 private:
         int fd_;

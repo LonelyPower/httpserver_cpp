@@ -28,7 +28,7 @@ void MyEventLoop::updateChannel(MyChannel *channel)
 {
     epoll_->updateChannel(channel); // 或者叫 updateChannel
 }
-    
+
 void MyEventLoop::delChannel(MyChannel *channel)
 {
     epoll_->delChannel(channel);

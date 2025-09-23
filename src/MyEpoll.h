@@ -7,18 +7,19 @@
 
 #define MAX_EVENTS 65500
 
-class MyEpoll {
+class MyEpoll
+{
 public:
-    MyEpoll(int maxEvents = MAX_EVENTS);                          
+    MyEpoll(int maxEvents = MAX_EVENTS);
     ~MyEpoll();
 
-    void updateChannel(MyChannel* channel);       // 注册或修改 Channel
-    void delChannel(MyChannel* channel);       // 删除 Channel
+    void updateChannel(MyChannel *channel); // 注册或修改 Channel
+    void delChannel(MyChannel *channel);    // 删除 Channel
     // int waitEvents(int maxEvents=MAX_EVENTS, int timeout = -1);          // 等待事件
-    std::vector<MyChannel*> getActiveChannels(int timeout=-1); // 返回活跃的 Channel
+    std::vector<MyChannel *> getActiveChannels(int timeout = -1); // 返回活跃的 Channel
 
-    int  getFd() const { return epfd_; } 
-    std::vector<epoll_event>& getEvents() { return events_; } 
+    int getFd() const { return epfd_; }
+    std::vector<epoll_event> &getEvents() { return events_; }
 
 private:
     int epfd_;

@@ -4,12 +4,13 @@
 #include <vector>
 #include <errno.h>
 #include "MyConnection.h"
-
-MyConnection::MyConnection(MyEventLoop* loop, int c_sockfd) : event_loop_(loop), message_callback_(nullptr)
+#include "config.h"
+MyConnection::MyConnection(MyEventLoop *loop, int c_sockfd) : event_loop_(loop), message_callback_(nullptr)
 {
-    channel_ = new MyChannel(c_sockfd, EPOLLIN);
+    channel_ = new MyChannel(c_sockfd, HANDLE_MODE);
 
-    channel_->setCallback([this]() {
+    channel_->setCallback([this]()
+                          {
         // Loop read for EPOLLET until EAGAIN
         for (;;) {
             int savedErrno = 0;
@@ -30,22 +31,22 @@ MyConnection::MyConnection(MyEventLoop* loop, int c_sockfd) : event_loop_(loop),
                 break;
             }
         }
-        if (this->message_callback_) this->message_callback_(channel_->getFd());
-    });
+        if (this->message_callback_) this->message_callback_(channel_->getFd()); });
 
     event_loop_->updateChannel(channel_);
-    //printf("new client fd %d connected!\n", c_sockfd);
+    // printf("new client fd %d connected!\n", c_sockfd);
 }
 MyConnection::~MyConnection()
 {
-    if (channel_) {
+    if (channel_)
+    {
         event_loop_->delChannel(channel_);
         delete channel_;
         channel_ = nullptr;
     }
 }
 
-void MyConnection::setMessageCallback(std::function<void( int)> cb) 
+void MyConnection::setMessageCallback(std::function<void(int)> cb)
 {
     message_callback_ = std::move(cb);
 }

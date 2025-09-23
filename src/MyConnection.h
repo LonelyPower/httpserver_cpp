@@ -9,11 +9,10 @@
 #include "MyChannel.h"
 #include "Buffer.h"
 
-
-
-class MyConnection {
+class MyConnection
+{
 public:
-    MyConnection(MyEventLoop *loop,int c_sockfd);                       
+    MyConnection(MyEventLoop *loop, int c_sockfd);
     ~MyConnection();
 
     // void handleClientEvent(MyChannel* channel);
@@ -24,8 +23,8 @@ public:
     // void handleClientEvent(int c_sockfd);
     // void newConnection();
 
-    Buffer& getInputBuffer() { return inputBuffer_; }
-    Buffer& getOutputBuffer() { return outputBuffer_; }
+    Buffer &getInputBuffer() { return inputBuffer_; }
+    Buffer &getOutputBuffer() { return outputBuffer_; }
 
 private:
     MyEventLoop *event_loop_;
@@ -35,6 +34,5 @@ private:
     std::function<void(int)> message_callback_;
     Buffer inputBuffer_;
     Buffer outputBuffer_;
-    MyChannel* channel_ {nullptr};
-
+    MyChannel *channel_{nullptr};
 };

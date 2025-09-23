@@ -10,10 +10,11 @@
 #include "MyAcceptor.h"
 #include "MyConnection.h"
 #include "MyThreadPool.h"
+#include "config.h"
 
 class MyServer {
 public:
-    MyServer(MyEventLoop *loop,int poolsize=4,const std::string& ip="127.0.0.1", int port=8888);                        // 构造函数
+    MyServer(MyEventLoop *loop,int poolsize=POOL_SIZE,const std::string& ip=SERVER_IP, int port=SERVER_PORT);                        // 构造函数
     ~MyServer();                         // 析构函数
 
     void handleClientEvent(int c_sockfd);
