@@ -19,9 +19,9 @@ void MyEventLoop::startLoop()
         std::vector<MyChannel *> activeChannels = epoll_->getActiveChannels(); // 获取就绪的 Channel
         for (auto *ch : activeChannels)
         {
-            cout << "1 Handling event for channel: " << ch->fd() << endl;
+            // cout << "1 Handling event for channel: " << ch->fd() << endl;
             ch->handleEvent(); // 分发事件
-            cout << "1 Finished handling event for channel: " << ch->fd() << endl;
+            // cout << "1 Finished handling event for channel: " << ch->fd() << endl;
         }
     }
 }

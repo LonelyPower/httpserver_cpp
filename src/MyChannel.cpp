@@ -21,9 +21,11 @@ void MyChannel::handleEvent()
     {
         if (readCallback_)
         {
-            cout << "2 Invoking read callback for channel: " << fd_ << endl;
+            // cout << "2 Invoking read callback for channel: " << fd_ << endl;
+            // printf("2 Invoking read callback for channel: %d\n", fd_);
             readCallback_();
-            cout << "2 Finished read callback for channel: " << fd_ << endl;
+            // printf("2 Finished read callback for channel: %d\n", fd_);
+            // cout << "2 Finished read callback for channel: " << fd_ << endl;
         } 
     }
     // 可以扩展其他事件的处理

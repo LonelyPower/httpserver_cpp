@@ -230,6 +230,33 @@ src/MyAcceptor.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/MyAcceptor.cpp.s
 .PHONY : src/MyAcceptor.cpp.s
 
+src/MyBuffer.o: src/MyBuffer.cpp.o
+.PHONY : src/MyBuffer.o
+
+# target to build an object file
+src/MyBuffer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/MyBuffer.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/MyBuffer.cpp.o
+.PHONY : src/MyBuffer.cpp.o
+
+src/MyBuffer.i: src/MyBuffer.cpp.i
+.PHONY : src/MyBuffer.i
+
+# target to preprocess a source file
+src/MyBuffer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/MyBuffer.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/MyBuffer.cpp.i
+.PHONY : src/MyBuffer.cpp.i
+
+src/MyBuffer.s: src/MyBuffer.cpp.s
+.PHONY : src/MyBuffer.s
+
+# target to generate assembly for a file
+src/MyBuffer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/MyBuffer.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/MyBuffer.cpp.s
+.PHONY : src/MyBuffer.cpp.s
+
 src/MyChannel.o: src/MyChannel.cpp.o
 .PHONY : src/MyChannel.o
 
@@ -439,6 +466,9 @@ help:
 	@echo "... src/MyAcceptor.o"
 	@echo "... src/MyAcceptor.i"
 	@echo "... src/MyAcceptor.s"
+	@echo "... src/MyBuffer.o"
+	@echo "... src/MyBuffer.i"
+	@echo "... src/MyBuffer.s"
 	@echo "... src/MyChannel.o"
 	@echo "... src/MyChannel.i"
 	@echo "... src/MyChannel.s"
