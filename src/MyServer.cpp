@@ -25,6 +25,7 @@ MyServer::~MyServer()
 
 void MyServer::handleClientEvent(int c_sockfd)
 {
+    cout << "6 Handling client event for fd: " << c_sockfd << endl;
     auto it = connections_.find(c_sockfd);
     if (it == connections_.end())
         return;
@@ -65,6 +66,7 @@ void MyServer::handleClientEvent(int c_sockfd)
             return;
         }
     }
+    cout << "6 Finished handling client event for fd: " << c_sockfd << endl;
 }
 
 void MyServer::newConnection(int c_sockfd)
@@ -74,7 +76,10 @@ void MyServer::newConnection(int c_sockfd)
     MyConnection *conn = new MyConnection(ioLoop, c_sockfd);
     conn->setMessageCallback(
         [this](int fd)
-        { this->handleClientEvent(fd); });
+        { cout<<"5 Message callback invoked for connection fd: " << fd << endl;
+            this->handleClientEvent(fd);
+            cout<<"5 Finished message callback for connection fd: " << fd << endl;
+        });
 
     connections_[c_sockfd] = conn;
     // printf("new client fd %d connected!\n", c_sockfd);

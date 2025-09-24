@@ -11,6 +11,7 @@ MyConnection::MyConnection(MyEventLoop *loop, int c_sockfd) : event_loop_(loop),
 
     channel_->setCallback([this]()
                           {
+            cout<<"3 Read callback invoked for connection fd: " << channel_->getFd() << endl;
         // Loop read for EPOLLET until EAGAIN
         for (;;) {
             int savedErrno = 0;
@@ -31,7 +32,12 @@ MyConnection::MyConnection(MyEventLoop *loop, int c_sockfd) : event_loop_(loop),
                 break;
             }
         }
-        if (this->message_callback_) this->message_callback_(channel_->getFd()); });
+        if (this->message_callback_) 
+        {
+            cout << "4 Invoking message callback for connection fd: " << channel_->getFd() << endl;
+            this->message_callback_(channel_->getFd());
+            cout << "4 Finished message callback for connection fd: " << channel_->getFd() << endl;
+        } });
 
     event_loop_->updateChannel(channel_);
     // printf("new client fd %d connected!\n", c_sockfd);
