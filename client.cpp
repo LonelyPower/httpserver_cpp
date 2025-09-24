@@ -3,9 +3,10 @@
 #include <arpa/inet.h>
 #include <string.h>
 #include <unistd.h>
-#include "src/MySocket.h"
-#include "src/MyChannel.h"
-#define BUFFER_SIZE 1024 
+#include "MySocket.h"
+#include "MyChannel.h"
+
+#define BUFFER_SIZE 1024
 
 int main() 
 {

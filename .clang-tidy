@@ -4,6 +4,9 @@ Checks: >
   readability-*,
   modernize-*,
   cppcoreguidelines-*,
+  -readability-identifier-naming,   # 禁掉命名规范（避免几万条无用警告）
+  -modernize-use-trailing-return-type, # 不强制 auto -> int
+  -cppcoreguidelines-avoid-magic-numbers, # 先允许魔法数字，后续再逐步替换
   -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
   -cppcoreguidelines-owning-memory,
   -cppcoreguidelines-avoid-magic-numbers,
@@ -15,11 +18,15 @@ HeaderFilterRegex: 'src/.*'   # 只检查 src/ 下的源码
 
 AnalyzeTemporaryDtors: false
 CheckOptions:
+  # - key:             readability-identifier-naming.VariableCase
+  #   value:           lower_case
+  # - key:             readability-identifier-naming.FunctionCase
+  #   value:           CamelCase
+  # - key:             readability-identifier-naming.ClassCase
+  #   value:           CamelCase
+  # - key:             modernize-use-nullptr.NullMacros
+  #   value:           'NULL'
   - key:             readability-identifier-naming.VariableCase
     value:           lower_case
   - key:             readability-identifier-naming.FunctionCase
-    value:           CamelCase
-  - key:             readability-identifier-naming.ClassCase
-    value:           CamelCase
-  - key:             modernize-use-nullptr.NullMacros
-    value:           'NULL'
+    value:           lower_case

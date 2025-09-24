@@ -1,5 +1,8 @@
-#include "src/MyEventLoop.h"
-#include "src/MyServer.h"
+#include "MySocket.h"
+#include "MyChannel.h"
+#include "MyEventLoop.h"
+#include "MyServer.h"
+
 #include <sys/resource.h>
 
 int main()
