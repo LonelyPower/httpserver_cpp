@@ -39,9 +39,9 @@ void MyServer::handleClientEvent(int c_sockfd)
     MyBuffer &out = conn->getOutputBuffer();
 
     // 从输入缓冲区拿到本次读到的数据（在 MyConnection 的 Channel 回调中已读入）
-    if (in.getUnreadSize() > 0)
+    if (conn->getUnreadSize() > 0)
     {
-        std::string msg = in.getContentAsString();
+        std::string msg = conn->readFromConnection();
         printf("message from client fd %d: %s\n", c_sockfd, msg.c_str());
 
         //  返回最小 HTTP 响应，便于 wrk 正常统计
@@ -57,9 +57,9 @@ void MyServer::handleClientEvent(int c_sockfd)
                               bodyLen);
         // 尽量一次写完 header + body（非阻塞写不保证全部写完，但响应很小一般可一次写完）
 
-        out.addToBuffer(header, hdrLen);
-        out.addToBuffer(kBody, bodyLen);
-        if (out.writeFromBuffer(c_sockfd) < 0)
+        conn->addToBuffer(header, hdrLen);
+        conn->addToBuffer(kBody, bodyLen);
+        if (conn->writeToSocket() < 0)
         {
             if (errno != EAGAIN)
             {

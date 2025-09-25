@@ -5,9 +5,9 @@
 #include <errno.h>
 #include "MyConnection.h"
 #include "config.h"
-MyConnection::MyConnection(MyEventLoop *loop, int c_sockfd) : event_loop_(loop), inputBuffer_(), outputBuffer_(), connection_callback_(nullptr)
+MyConnection::MyConnection(MyEventLoop *loop, int sockfd) : event_loop_(loop), socket_fd_(sockfd), inputBuffer_(), outputBuffer_(), connection_callback_(nullptr)
 {
-    channel_ = new MyChannel(c_sockfd, HANDLE_MODE);
+    channel_ = new MyChannel(sockfd, HANDLE_MODE);
 
     channel_->setCallback([this]()
                           {
@@ -23,7 +23,7 @@ MyConnection::MyConnection(MyEventLoop *loop, int c_sockfd) : event_loop_(loop),
         } });
 
     event_loop_->updateChannel(channel_);
-    // printf("new client fd %d connected!\n", c_sockfd);
+    // printf("new client fd %d connected!\n", sockfd);
 }
 MyConnection::~MyConnection()
 {
