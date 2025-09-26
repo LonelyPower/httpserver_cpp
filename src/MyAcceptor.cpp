@@ -63,7 +63,8 @@ void MyAcceptor::handleConnection()
     }
 }
 
-void MyAcceptor::setAcceptorCallBack(const std::function<void(int)> cb)
+using AcceptorCallback = std::function<void(MySocket)>;
+void MyAcceptor::setAcceptorCallback(AcceptorCallback cb)
 {
     acceptor_callback_ = std::move(cb);
 }
