@@ -2,16 +2,19 @@
 #include <iostream>
 #include <unistd.h>
 #include <errno.h>
-#include <cstdio>     // 添加这行，用于 printf 和 snprintf
-#include <cstring>  
+#include <cstdio> // 添加这行，用于 printf 和 snprintf
+#include <cstring>
 MyServer::MyServer(MyEventLoop *loop, int poolsize, const std::string &ip, int port) : event_loop_(loop)
 {
     thread_pool_ = new MyThreadPool(poolsize);
     thread_pool_->start();
 
     acceptor_ = new MyAcceptor(loop, ip, port);
-    acceptor_->setAcceptorCallBack([this](int c_sockfd)
-                           { this->handleServerEvent(c_sockfd); });
+    acceptor_->setAcceptorCallBack(
+        [this](MySocket clientSock)
+        {
+            this->handleServerEvent(std::move(clientSock));
+        });
     // MyEpoll epoll;
     // serv_channel = new MyChannel(serv_sock->getFd(), EPOLLIN);
     // std::function<void()> cb = std::bind(&MyServer::handleServerEvent, this);
@@ -31,9 +34,9 @@ void MyServer::handleClientEvent(int c_sockfd)
     auto it = connections_.find(c_sockfd);
     if (it == connections_.end())
     {
-          return;
+        return;
     }
-      
+
     MyConnection *conn = it->second;
     MyBuffer &in = conn->getInputBuffer();
     MyBuffer &out = conn->getOutputBuffer();
@@ -75,20 +78,21 @@ void MyServer::handleClientEvent(int c_sockfd)
     // cout << "6 Finished handling client event for fd: " << c_sockfd << endl;
 }
 
-void MyServer::newConnection(int c_sockfd)
+void MyServer::newConnection(MySocket client_socket)
 {
     MyEventLoop *ioLoop = thread_pool_->getNextLoop();
 
-    MyConnection *conn = new MyConnection(ioLoop, c_sockfd);
+    // MyConnection *conn = new MyConnection(ioLoop, std::move(client_socket));
+    auto conn = std::make_shared<MyConnection>(ioLoop, std::move(client_socket));
     conn->setConnectionCallback(
         [this](int fd)
-        { 
+        {
             // cout<<"5 Message callback invoked for connection fd: " << fd << endl;
             this->handleClientEvent(fd);
             // cout<<"5 Finished message callback for connection fd: " << fd << endl;
         });
 
-    connections_[c_sockfd] = conn;
+    connections_[conn->getFd()] = conn;
     // printf("new client fd %d connected!\n", c_sockfd);
 }
 
@@ -102,7 +106,7 @@ void MyServer::newConnection(int c_sockfd)
 
 // }
 
-void MyServer::handleServerEvent(int c_sockfd)
+void MyServer::handleServerEvent(MySocket client_socket)
 {
-    newConnection(c_sockfd);
+    newConnection(std::move(client_socket));
 }
