@@ -10,3 +10,7 @@ test
 *.camke
 
 
+build/cmake_install.cmake
+build/Makefile
+build/build.ninja
+/build/cmake_install.cmake

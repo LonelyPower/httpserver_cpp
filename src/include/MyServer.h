@@ -29,6 +29,7 @@ private:
     // MySocket* serv_sock;
     // MyChannel* serv_channel_;
     std::map<int, MyConnection*> connections_;
+    MyConnection* connections1_{nullptr}; // 用于分析关系测试
     // std::vector<MyThreadPool*> thread_pool_;
     MyThreadPool* thread_pool_; 
 
