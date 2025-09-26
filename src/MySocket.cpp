@@ -15,7 +15,7 @@ MySocket::MySocket()
     }
     // fcntl(sockfd, F_SETFL, fcntl(sockfd, F_GETFL) | O_NONBLOCK);
 }
-
+MySocket::MySocket(int fd) : sockfd_(fd) , addr_{} {}
 MySocket::~MySocket()
 {
     if (sockfd_ >= 0)
@@ -45,7 +45,7 @@ void MySocket::startListen(int backlog)
     }
 }
 
-int MySocket::acceptConn()
+MySocket MySocket::acceptConn()
 {
     sockaddr_in c_addr{};
     socklen_t c_addr_len = sizeof(c_addr);
@@ -57,7 +57,7 @@ int MySocket::acceptConn()
         perror("accept failed");
     }
     // fcntl(cfd, F_SETFL, fcntl(sockfd_, F_GETFL) | O_NONBLOCK);
-    return cfd;
+    return MySocket(cfd);
 }
 
 void MySocket::connectToServer(const std::string &ip, int port)
