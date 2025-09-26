@@ -7,6 +7,8 @@
 #include "config.h"
 MyConnection::MyConnection(MyEventLoop *loop, int sockfd) : event_loop_(loop), socket_fd_(sockfd), inputBuffer_(), outputBuffer_(), connection_callback_(nullptr)
 {
+    if(event_loop_)
+    {
     channel_ = new MyChannel(sockfd, HANDLE_MODE);
 
     channel_->setCallback([this]()
@@ -24,6 +26,12 @@ MyConnection::MyConnection(MyEventLoop *loop, int sockfd) : event_loop_(loop), s
 
     event_loop_->updateChannel(channel_);
     // printf("new client fd %d connected!\n", sockfd);
+    }
+    else
+    {
+        channel_ = nullptr;
+        // printf("event_loop_ is nullptr!\n");
+    }
 }
 MyConnection::~MyConnection()
 {

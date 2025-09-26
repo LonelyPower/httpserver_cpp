@@ -1,7 +1,7 @@
 #include <iostream>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#include <string.h>
+#include <string>
 #include <unistd.h>
 #include "MySocket.h"
 #include "MyChannel.h"
@@ -25,8 +25,8 @@ int main()
     {
         // char buf[BUFFER_SIZE]; // 在这个版本，buf大小必须大于或等于服务器端buf大小，不然会出错，想想为什么？
         // bzero(&buf, sizeof(buf));
-        string buf;
-        std::getline(cin, buf);
+        std::string buf;
+        std::getline(std::cin, buf);
         conn.addToBuffer(buf);
         ssize_t write_bytes = conn.writeToSocket();
         if (write_bytes == -1)
