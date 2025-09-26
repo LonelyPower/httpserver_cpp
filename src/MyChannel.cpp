@@ -30,9 +30,9 @@ void MyChannel::handleEvent()
     }
     // 可以扩展其他事件的处理
 }
-void MyChannel::setCallback(const std::function<void()> cb) 
+void MyChannel::setChannelCallback(const std::function<void()> cb) 
 {
     // cout << "2 Setting read callback for channel: " << fd_ << endl;
-    readCallback_ = std::move(cb); 
+    channelCallback_ = std::move(cb); 
     // cout << "2 Finished setting read callback for channel: " << fd_ << endl;
 }

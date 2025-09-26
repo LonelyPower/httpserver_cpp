@@ -10,7 +10,7 @@ MyServer::MyServer(MyEventLoop *loop, int poolsize, const std::string &ip, int p
     thread_pool_->start();
 
     acceptor_ = new MyAcceptor(loop, ip, port);
-    acceptor_->setCallBack([this](int c_sockfd)
+    acceptor_->setAcceptorCallBack([this](int c_sockfd)
                            { this->handleServerEvent(c_sockfd); });
     // MyEpoll epoll;
     // serv_channel = new MyChannel(serv_sock->getFd(), EPOLLIN);

@@ -9,7 +9,7 @@ MyConnection::MyConnection(MyEventLoop *loop, int sockfd) : event_loop_(loop), s
 {
     channel_ = new MyChannel(sockfd, HANDLE_MODE);
 
-    channel_->setCallback([this]()
+    channel_->setChannelCallback([this]()
                           {
             // cout<<"3 Read callback invoked for connection fd: " << channel_->getFd() << endl;
         // Loop read for EPOLLET until EAGAIN
