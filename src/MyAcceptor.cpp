@@ -7,17 +7,14 @@ MyAcceptor::MyAcceptor(MyEventLoop *loop, const std::string &ip, int port) : eve
     server_sock_.startListen();
 
     // MyEpoll epoll;
-    serv_channel_ = new MyChannel(server_sock_.getFd(), ACCEPT_MODE);
+    auto serv_channel_ = std::make_unique<MyChannel>(server_sock_.getFd(), ACCEPT_MODE);
     // serv_channel_ = new MyChannel(serv_sock_->getFd() );
     serv_channel_->setChannelCallback([this]()
                                { handleConnection(); });
 
     event_loop_->updateChannel(serv_channel_);
 }
-MyAcceptor::~MyAcceptor()
-{
-    delete serv_channel_;
-}
+MyAcceptor::~MyAcceptor(){}
 
 void MyAcceptor::handleConnection()
 {
