@@ -19,11 +19,11 @@ void MyChannel::handleEvent()
 {
     if (revents_ & EPOLLIN) 
     {
-        if (readCallback_)
+        if (channelCallback_)
         {
             // cout << "2 Invoking read callback for channel: " << fd_ << endl;
             // printf("2 Invoking read callback for channel: %d\n", fd_);
-            readCallback_();
+            channelCallback_();
             // printf("2 Finished read callback for channel: %d\n", fd_);
             // cout << "2 Finished read callback for channel: " << fd_ << endl;
         } 
