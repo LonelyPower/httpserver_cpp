@@ -19,11 +19,11 @@ void MyChannel::handleEvent()
 {
     if (revents_ & EPOLLIN) 
     {
-        if (channelCallback_)
+        if (channel_callback_)
         {
             // cout << "2 Invoking read callback for channel: " << fd_ << endl;
             // printf("2 Invoking read callback for channel: %d\n", fd_);
-            channelCallback_();
+            channel_callback_();
             // printf("2 Finished read callback for channel: %d\n", fd_);
             // cout << "2 Finished read callback for channel: " << fd_ << endl;
         } 
@@ -33,6 +33,6 @@ void MyChannel::handleEvent()
 void MyChannel::setChannelCallback(const std::function<void()> cb) 
 {
     // cout << "2 Setting read callback for channel: " << fd_ << endl;
-    channelCallback_ = std::move(cb); 
+    channel_callback_ = std::move(cb); 
     // cout << "2 Finished setting read callback for channel: " << fd_ << endl;
 }

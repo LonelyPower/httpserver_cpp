@@ -30,5 +30,5 @@ private:
         uint32_t events_;
         uint32_t revents_;
         bool inEpoll_;
-        std::function<void()> channelCallback_;
+        std::function<void()> channel_callback_;
 };
