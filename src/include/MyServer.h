@@ -19,9 +19,9 @@ public:
 
     void handleClientEvent(int c_sockfd);
     // void handleClientEvent(MyChannel* channel);
-    void handleServerEvent(int c_sockfd);
+    void handleServerEvent(MySocket client_socket);
     // void handleClientEvent(int c_sockfd);
-    void newConnection(int c_sockfd);
+    void newConnection(MySocket client_socket);
 
 private:
     MyEventLoop *event_loop_;

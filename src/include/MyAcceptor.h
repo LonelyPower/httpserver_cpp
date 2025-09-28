@@ -6,7 +6,7 @@
 #include "MySocket.h"
 #include "MyChannel.h"
 #include "config.h"
-
+using AcceptorCallback = std::function<void(MySocket)>;
 class MyAcceptor
 {
 public:
@@ -14,8 +14,7 @@ public:
     ~MyAcceptor();                                                  // 析构函数
 
     // void handleClientEvent(MyChannel* channel);
-    void setCallBack(const std::function<void(int)> cb);
-    void handleConnection1();
+    void setAcceptorCallback(AcceptorCallback cb);
     void handleConnection();
     // void handleServerEvent();
     // void handleClientEvent(int c_sockfd);
@@ -23,7 +22,8 @@ public:
 
 private:
     MyEventLoop *event_loop_;
-    MySocket *serv_sock_;
+    MySocket server_sock_;
     MyChannel *serv_channel_;
+
     std::function<void(int)> acceptor_callback_;
 };

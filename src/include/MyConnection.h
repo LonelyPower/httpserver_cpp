@@ -8,11 +8,12 @@
 #include "MyEventLoop.h"
 #include "MyChannel.h"
 #include "MyBuffer.h"
+#include "MySocket.h"
 
 class MyConnection
 {
 public:
-    MyConnection(MyEventLoop *loop, int sockfd);
+    MyConnection(MyEventLoop *loop, MySocket&& client_socket);
     ~MyConnection();
 
     void setConnectionCallback(std::function<void(int)> cb);
@@ -22,24 +23,18 @@ public:
     std::string readFromConnection(size_t len){ return inputBuffer_.getContentAsString(len); }
     void addToBuffer(const char *data, size_t len) { outputBuffer_.addToBuffer(data, len); }
     void addToBuffer(const std::string &data) { outputBuffer_.addToBuffer(data); }
-    ssize_t writeToSocket() { return outputBuffer_.writeFromBuffer(socket_fd_); }
+    ssize_t writeToSocket() { return outputBuffer_.writeFromBuffer(client_socket_.getFd()); }
     size_t getUnreadSize() const { return inputBuffer_.getUnreadSize(); }
 
     MyBuffer &getInputBuffer() { return inputBuffer_; }
     MyBuffer &getOutputBuffer() { return outputBuffer_; }
 
 private:
-    int socket_fd_;
+    MySocket client_socket_;
     MyEventLoop *event_loop_;
     std::function<void(int)> connection_callback_;
-    MyChannel *channel_{nullptr};
+    MyChannel *channel_;
     MyBuffer inputBuffer_;
     MyBuffer outputBuffer_;
 };
 
-// void handleClientEvent(MyChannel* channel);
-// void setMessageCallback(const std::function<void(MyConnection*, int)>& cb,int fd);
-// void handleConnection();
-// void handleServerEvent();
-// void handleClientEvent(int c_sockfd);
-// void newConnection();

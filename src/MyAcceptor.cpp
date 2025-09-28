@@ -1,15 +1,15 @@
 #include "MyAcceptor.h"
 
-MyAcceptor::MyAcceptor(MyEventLoop *loop, const std::string &ip, int port) : event_loop_(loop)
+MyAcceptor::MyAcceptor(MyEventLoop *loop, const std::string &ip, int port) : event_loop_(loop), server_sock_()
 {
-    serv_sock_ = new MySocket();
-    serv_sock_->bindAddr(ip, port);
-    serv_sock_->startListen();
+    // server_sock_ = new MySocket();
+    server_sock_.bindAddr(ip, port);
+    server_sock_.startListen();
 
     // MyEpoll epoll;
-    serv_channel_ = new MyChannel(serv_sock_->getFd(), ACCEPT_MODE);
+    serv_channel_ = new MyChannel(server_sock_.getFd(), ACCEPT_MODE);
     // serv_channel_ = new MyChannel(serv_sock_->getFd() );
-    serv_channel_->setCallback([this]()
+    serv_channel_->setChannelCallback([this]()
                                { handleConnection(); });
 
     event_loop_->updateChannel(serv_channel_);
@@ -17,22 +17,13 @@ MyAcceptor::MyAcceptor(MyEventLoop *loop, const std::string &ip, int port) : eve
 MyAcceptor::~MyAcceptor()
 {
     delete serv_channel_;
-    delete serv_sock_;
 }
-void MyAcceptor::handleConnection1()
-{
 
-    int cfd = serv_sock_->acceptConn();
-    if (acceptor_callback_)
-    {
-        acceptor_callback_(cfd); // 交给 Server
-    }
-}
 void MyAcceptor::handleConnection()
 {
     while (true)
     {
-        int cfd = serv_sock_->acceptConn();
+        int cfd = server_sock_.acceptConn();
         if (cfd < 0)
         {
             if (errno == EAGAIN || errno == EWOULDBLOCK)
@@ -71,7 +62,8 @@ void MyAcceptor::handleConnection()
     }
 }
 
-void MyAcceptor::setCallBack(const std::function<void(int)> cb)
+using AcceptorCallback = std::function<void(MySocket)>;
+void MyAcceptor::setAcceptorCallback(AcceptorCallback cb)
 {
     acceptor_callback_ = std::move(cb);
 }

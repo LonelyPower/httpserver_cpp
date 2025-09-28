@@ -5,13 +5,14 @@
 #include <errno.h>
 #include "MyConnection.h"
 #include "config.h"
-MyConnection::MyConnection(MyEventLoop *loop, int sockfd) : event_loop_(loop), socket_fd_(sockfd), inputBuffer_(), outputBuffer_(), connection_callback_(nullptr)
+MyConnection::MyConnection(MyEventLoop *loop, MySocket&& client_socket) : event_loop_(loop), inputBuffer_(), outputBuffer_(), connection_callback_(nullptr)
 {
     if(event_loop_)
     {
-    channel_ = new MyChannel(sockfd, HANDLE_MODE);
+    client_socket_ = std::move(client_socket);
+    channel_ = new MyChannel(client_socket_.getFd(), HANDLE_MODE);
 
-    channel_->setCallback([this]()
+        channel_->setChannelCallback([this]()
                           {
             // cout<<"3 Read callback invoked for connection fd: " << channel_->getFd() << endl;
         // Loop read for EPOLLET until EAGAIN
