@@ -33,7 +33,7 @@ private:
     MySocket client_socket_;
     MyEventLoop *event_loop_;
     std::function<void(int)> connection_callback_;
-    MyChannel *channel_;
+    MyChannel *client_channel_;
     MyBuffer inputBuffer_;
     MyBuffer outputBuffer_;
 };

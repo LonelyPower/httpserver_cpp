@@ -22,7 +22,7 @@ public:
 
 private:
     MyEventLoop *event_loop_;
-    MySocket server_sock_;
+    MySocket server_socket_;
     MyChannel *server_channel_;
 
     std::function<void(int)> acceptor_callback_;
