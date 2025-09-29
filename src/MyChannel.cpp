@@ -8,8 +8,8 @@
 MyChannel::MyChannel(int fd,int32_t events)
 {
     this->fd_ = fd;
-    this->events_ = events;
-    this->revents_ = 0;
+    this->channel_events_ = events;
+    this->channel_ready_events_ = 0;
     this->inEpoll_ = false;
 }
 
@@ -17,7 +17,7 @@ MyChannel::~MyChannel(){}
 
 void MyChannel::handleEvent() 
 {
-    if (revents_ & EPOLLIN) 
+    if (channel_ready_events_ & EPOLLIN) 
     {
         if (channel_callback_)
         {

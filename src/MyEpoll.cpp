@@ -72,7 +72,7 @@ std::vector<MyChannel *> MyEpoll::getActiveChannels(int timeout)
     for (int i = 0; i < nfds; ++i)
     {
         MyChannel *ch = (MyChannel *)events_[i].data.ptr;
-        ch->setRevents(events_[i].events);
+        ch->setReadyEvents(events_[i].events);
         activeChannels.push_back(ch);
     }
     return activeChannels;
