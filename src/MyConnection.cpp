@@ -39,8 +39,8 @@ MyConnection::~MyConnection()
     if (client_channel_)
     {
         event_loop_->delChannel(client_channel_);
-        delete client_channel_;
-        client_channel_ = nullptr;
+        // delete client_channel_;
+        // client_channel_ = nullptr;
     }
 }
 

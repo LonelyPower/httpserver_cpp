@@ -14,7 +14,13 @@ MyAcceptor::MyAcceptor(MyEventLoop *loop, const std::string &ip, int port) : eve
 
     event_loop_->updateChannel(server_channel_);
 }
-MyAcceptor::~MyAcceptor() {}
+MyAcceptor::~MyAcceptor() 
+{
+    if(server_channel_)
+    {
+        event_loop_->delChannel(server_channel_);
+    }
+}
 
 void MyAcceptor::handleConnection()
 {

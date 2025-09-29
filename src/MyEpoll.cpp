@@ -54,14 +54,14 @@ void MyEpoll::updateChannel(MyChannel *channel)
 
 void MyEpoll::delChannel(MyChannel *channel)
 {
-    if (channel->isInEpoll())
-    {
+    // if (channel->isInEpoll())
+    // {
         if (epoll_ctl(epfd_, EPOLL_CTL_DEL, channel->getFd(), nullptr) == -1)
         {
             perror("epoll_ctl del");
         }
-        channel->setInEpoll(false);
-    }
+        // channel->setInEpoll(false);
+    // }
 }
 
 std::vector<MyChannel *> MyEpoll::getActiveChannels(int timeout)
