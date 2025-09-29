@@ -12,7 +12,7 @@ MyConnection::MyConnection(MyEventLoop *loop, MySocket&& client_socket) : event_
     client_socket_ = std::move(client_socket);
     channel_ = new MyChannel(client_socket_.getFd(), HANDLE_MODE);
 
-        channel_->setChannelCallback([this]()
+        channel_->setChannelReadCallback([this]()
                           {
             // cout<<"3 Read callback invoked for connection fd: " << channel_->getFd() << endl;
         // Loop read for EPOLLET until EAGAIN
