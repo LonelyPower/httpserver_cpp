@@ -13,22 +13,27 @@ public:
         ~MyChannel();
 
         // void addToEpoll(int socketfd,uint32_t  mode);
-        void setEvents(uint32_t ev) { events_ = ev; }
-        void setRevents(uint32_t rev) { revents_ = rev; }
-        void setInEpoll(bool in) { inEpoll_ = in; }
-        void setChannelCallback(const std::function<void()> cb);
+        void setEvents(uint32_t ev) { channel_events_ = ev; }
+        void setReadyEvents(uint32_t rev) { channel_ready_events_ = rev; }
+        // void setInEpoll(bool in) { inEpoll_ = in; }
+        void setChannelReadCallback(const std::function<void()> cb);
+        void setChannelWriteCallback(const std::function<void()> cb);
         void handleEvent();
 
         int getFd() const { return fd_; }
         // std::vector<epoll_event>& getEvents() { return events; }
-        uint32_t getEvents() const { return events_; }
-        uint32_t getRevents() const { return revents_; }
+        uint32_t getEvents() const { return channel_events_; }
+        uint32_t getRevents() const { return channel_ready_events_; }
         bool isInEpoll() const { return inEpoll_; }
 
 private:
         int fd_;
-        uint32_t events_;
-        uint32_t revents_;
+        uint32_t channel_events_;
+        uint32_t channel_ready_events_;
         bool inEpoll_;
-        std::function<void()> channelCallback_;
+
+        std::function<void()> channel_read_callback_;
+        std::function<void()> channel_write_callback_;
+        std::function<void()> channel_close_callback_;
+        std::function<void()> channel_error_callback_;
 };

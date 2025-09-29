@@ -5,42 +5,42 @@
 #include <errno.h>
 #include "MyConnection.h"
 #include "config.h"
-MyConnection::MyConnection(MyEventLoop *loop, MySocket&& client_socket) : event_loop_(loop), inputBuffer_(), outputBuffer_(), connection_callback_(nullptr)
+MyConnection::MyConnection(MyEventLoop *loop, MySocket &&client_socket) : event_loop_(loop), inputBuffer_(), outputBuffer_(), connection_callback_(nullptr)
 {
-    if(event_loop_)
+    if (event_loop_)
     {
-    client_socket_ = std::move(client_socket);
-    channel_ = new MyChannel(client_socket_.getFd(), HANDLE_MODE);
+        client_socket_ = std::move(client_socket);
+        client_channel_ = std::make_unique<MyChannel>(client_socket_.getFd(), LISTEN_MODE_ET);
 
-        channel_->setChannelCallback([this]()
-                          {
+        client_channel_->setChannelReadCallback([this]()
+                                         {
             // cout<<"3 Read callback invoked for connection fd: " << channel_->getFd() << endl;
         // Loop read for EPOLLET until EAGAIN
-        this->inputBuffer_.readToBuffer(channel_->getFd());
+        this->inputBuffer_.readToBuffer(client_channel_->getFd());
         // cout<<"3 Finished reading data for connection fd: " << channel_->getFd() << endl;
         if (this->connection_callback_)
         {
             // cout << "4 Invoking connection callback for connection fd: " << channel_->getFd() << endl;
-            this->connection_callback_(channel_->getFd());
+            this->connection_callback_(client_channel_->getFd());
             // cout << "4 Finished connection callback for connection fd: " << channel_->getFd() << endl;
         } });
 
-    event_loop_->updateChannel(channel_);
-    // printf("new client fd %d connected!\n", sockfd);
+        event_loop_->updateChannelToEpoll(client_channel_);
+        // printf("new client fd %d connected!\n", sockfd);
     }
     else
     {
-        channel_ = nullptr;
+        client_channel_ = nullptr;
         // printf("event_loop_ is nullptr!\n");
     }
 }
 MyConnection::~MyConnection()
 {
-    if (channel_)
+    if (client_channel_)
     {
-        event_loop_->delChannel(channel_);
-        delete channel_;
-        channel_ = nullptr;
+        event_loop_->delChannelFromEpoll(client_channel_);
+        // delete client_channel_;
+        // client_channel_ = nullptr;
     }
 }
 

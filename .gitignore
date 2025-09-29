@@ -15,3 +15,4 @@ build/Makefile
 build/build.ninja
 /build/cmake_install.cmake
 build/cmake_install.cmake
+build/compile_commands.json

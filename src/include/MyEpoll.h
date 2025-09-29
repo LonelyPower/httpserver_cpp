@@ -13,8 +13,8 @@ public:
     MyEpoll(int maxEvents = MAX_EVENTS);
     ~MyEpoll();
 
-    void updateChannel(MyChannel *channel); // 注册或修改 Channel
-    void delChannel(MyChannel *channel);    // 删除 Channel
+    void updateChannelToEpoll(MyChannel *channel); // 注册或修改 Channel
+    void delChannelFromEpoll(MyChannel *channel);    // 删除 Channel
     // int waitEvents(int maxEvents=MAX_EVENTS, int timeout = -1);          // 等待事件
     std::vector<MyChannel *> getActiveChannels(int timeout = -1); // 返回活跃的 Channel
 

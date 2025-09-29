@@ -26,7 +26,7 @@ MyEpoll::~MyEpoll()
     }
 }
 
-void MyEpoll::updateChannel(MyChannel *channel)
+void MyEpoll::updateChannelToEpoll(MyChannel *channel)
 {
     struct epoll_event ev;
     ev.events = channel->getEvents();
@@ -52,7 +52,7 @@ void MyEpoll::updateChannel(MyChannel *channel)
     }
 }
 
-void MyEpoll::delChannel(MyChannel *channel)
+void MyEpoll::delChannelFromEpoll(MyChannel *channel)
 {
     if (channel->isInEpoll())
     {
@@ -72,13 +72,13 @@ std::vector<MyChannel *> MyEpoll::getActiveChannels(int timeout)
     for (int i = 0; i < nfds; ++i)
     {
         MyChannel *ch = (MyChannel *)events_[i].data.ptr;
-        ch->setRevents(events_[i].events);
+        ch->setReadyEvents(events_[i].events);
         activeChannels.push_back(ch);
     }
     return activeChannels;
 }
 
-// void MyEpoll::delChannel(MyChannel* channel) {
+// void MyEpoll::delChannelFromEpoll(MyChannel* channel) {
 //     int fd = channel->getFd();
 //     struct epoll_event ev;
 //     memset(&ev, 0, sizeof(ev));
