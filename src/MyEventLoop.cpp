@@ -26,12 +26,12 @@ void MyEventLoop::startLoop()
     }
 }
 
-void MyEventLoop::updateChannel(MyChannel *channel)
+void MyEventLoop::updateChannelToEpoll(MyChannel *channel)
 {
-    epoll_->updateChannel(channel); // 或者叫 updateChannel
+    epoll_->updateChannelToEpoll(channel); // 或者叫 updateChannel
 }
 
-void MyEventLoop::delChannel(MyChannel *channel)
+void MyEventLoop::delChannelFromEpoll(MyChannel *channel)
 {
     epoll_->delChannel(channel);
 }

@@ -9,8 +9,8 @@ public:
     MyEventLoop();  // 构造函数
     ~MyEventLoop(); // 析构函数
 
-    void updateChannel(MyChannel *channel); // 添加通道
-    void delChannel(MyChannel *channel);    // 删除通道
+    void updateChannelToEpoll(MyChannel *channel); // 添加通道
+    void delChannelFromEpoll(MyChannel *channel);    // 删除通道
     void startLoop();                       // 事件循环
     void quitLoop() { isQuit_ = true; }
 

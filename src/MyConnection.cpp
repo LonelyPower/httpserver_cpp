@@ -25,7 +25,7 @@ MyConnection::MyConnection(MyEventLoop *loop, MySocket &&client_socket) : event_
             // cout << "4 Finished connection callback for connection fd: " << channel_->getFd() << endl;
         } });
 
-        event_loop_->updateChannel(client_channel_);
+        event_loop_->updateChannelToEpoll(client_channel_);
         // printf("new client fd %d connected!\n", sockfd);
     }
     else
@@ -38,7 +38,7 @@ MyConnection::~MyConnection()
 {
     if (client_channel_)
     {
-        event_loop_->delChannel(client_channel_);
+        event_loop_->delChannelFromEpoll(client_channel_);
         // delete client_channel_;
         // client_channel_ = nullptr;
     }
