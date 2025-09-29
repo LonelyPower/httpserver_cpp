@@ -24,13 +24,13 @@ public:
         // std::vector<epoll_event>& getEvents() { return events; }
         uint32_t getEvents() const { return channel_events_; }
         uint32_t getRevents() const { return channel_ready_events_; }
-        // bool isInEpoll() const { return inEpoll_; }
+        bool isInEpoll() const { return inEpoll_; }
 
 private:
         int fd_;
         uint32_t channel_events_;
         uint32_t channel_ready_events_;
-        // bool inEpoll_;
+        bool inEpoll_;
 
         std::function<void()> channel_read_callback_;
         std::function<void()> channel_write_callback_;

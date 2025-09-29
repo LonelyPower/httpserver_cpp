@@ -12,7 +12,16 @@ MyChannel::MyChannel(int fd, int32_t events)
     this->inEpoll_ = false;
 }
 
-MyChannel::~MyChannel() {}
+MyChannel::~MyChannel()
+{
+    if (inEpoll_)
+    {
+        if (epoll_ctl(epfd_, EPOLL_CTL_DEL, fd_, nullptr) == -1)
+        {
+            perror("epoll_ctl del");
+        }
+    }
+}
 
 void MyChannel::handleEvent()
 {
@@ -50,7 +59,6 @@ void MyChannel::handleEvent()
         }
     }
 }
-
 
 void MyChannel::setChannelReadCallback(const std::function<void()> cb)
 {
